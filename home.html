@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>হোম — পোর্টফোলিও</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+    :root {
+      --bg-overlay: rgba(5, 5, 10, 0.55);
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-strong: rgba(255, 255, 255, 0.14);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --text: #f5f5f7;
+      --text-faint: rgba(245, 245, 247, 0.65);
+      --accent: #d4af37;
+      --accent-soft: rgba(212, 175, 55, 0.25);
+      --radius: 20px;
+      --radius-sm: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url("bg.jpg") center/cover fixed no-repeat, #0a0a0f;
+      padding: 84px 16px 100px;
+    }
+    a { color: inherit; text-decoration: none; }
+    ::placeholder { color: var(--text-faint); }
+
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+    }
+
+    /* ---- টপবার ---- */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 16px;
+      background: rgba(10, 10, 15, 0.55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 50;
+    }
+    .topbar .brand {
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .search-wrap {
+      flex: 1;
+      max-width: 340px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 8px 14px;
+    }
+    .search-wrap input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .search-wrap i { width: 16px; height: 16px; color: var(--text-faint); flex-shrink: 0; }
+
+    /* ---- বটম ন্যাভ ---- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 4px;
+      padding: 8px;
+      z-index: 50;
+      width: min(420px, calc(100% - 24px));
+    }
+    .bottom-nav a {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 4px;
+      border-radius: var(--radius-sm);
+      font-size: 10px;
+      color: var(--text-faint);
+      transition: background 0.15s, color 0.15s;
+    }
+    .bottom-nav a i { width: 20px; height: 20px; }
+    .bottom-nav a.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .container { max-width: 720px; margin: 0 auto; }
+
+    .avatar {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--glass-border);
+      box-shadow: 0 0 0 6px var(--accent-soft);
+      display: block;
+      margin: 0 auto 16px;
+    }
+
+    .card {
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    .card h3 { margin: 0 0 6px; font-size: 16px; }
+    .card p { margin: 0; color: var(--text-faint); font-size: 13.5px; line-height: 1.6; }
+    .cover {
+      width: 100%; height: 150px; object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      border: 1px solid var(--glass-border);
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--glass-strong);
+      border: 1px solid var(--glass-border);
+      color: var(--text-faint);
+    }
+    .badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    h1.hero-title { text-align: center; font-size: 24px; margin: 4px 0 4px; }
+    p.hero-tagline { text-align: center; color: var(--text-faint); margin: 0 0 20px; font-size: 14px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-strong);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #1a1400;
+      border-color: var(--accent);
+    }
+    .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+
+    .social-row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+    .social-row a {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+    }
+    .social-row a i { width: 18px; height: 18px; }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+    label { font-size: 12px; color: var(--text-faint); display: block; margin-bottom: 6px; }
+
+    .empty-state { text-align: center; padding: 40px 12px; color: var(--text-faint); }
+
+    .star-row { display: flex; gap: 4px; margin: 6px 0; }
+    .star-row i { width: 15px; height: 15px; color: var(--accent); }
+
+    section.block { margin-bottom: 28px; }
+    section.block h2 {
+      font-size: 15px;
+      margin: 0 0 12px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* ---- চ্যাট ---- */
+    .chat-box { display: flex; flex-direction: column; height: 46vh; }
+    .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px; }
+    .msg { max-width: 78%; padding: 9px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; }
+    .msg.me { align-self: flex-end; background: var(--accent); color: #1a1400; border-bottom-right-radius: 4px; }
+    .msg.other { align-self: flex-start; background: var(--glass-strong); border-bottom-left-radius: 4px; }
+    .chat-input-row { display: flex; gap: 8px; margin-top: 10px; }
+    .chat-input-row input { margin-bottom: 0; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand" id="brandName">পোর্টফোলিও</div>
+    <form class="search-wrap" id="searchForm">
+      <i data-lucide="search"></i>
+      <input type="text" id="searchInput" placeholder="খুঁজুন..." autocomplete="off" />
+    </form>
+  </div>
+
+  <div class="container">
+    <img src="profile.jpg" alt="প্রোফাইল ছবি" class="avatar" onerror="this.style.display='none'" />
+    <h1 class="hero-title" id="heroName">লোড হচ্ছে...</h1>
+    <p class="hero-tagline" id="heroTagline"></p>
+    <div class="btn-row">
+      <span class="badge" id="ratingBadge" style="display:none;"></span>
+    </div>
+    <div class="btn-row">
+      <a href="contract.html" class="btn btn-accent"><i data-lucide="briefcase"></i> হায়ার করুন</a>
+      <a href="more.html" class="btn"><i data-lucide="user"></i> সম্পর্কে জানুন</a>
+    </div>
+    <div class="social-row" id="socialRow"></div>
+
+    <section class="block" style="margin-top:32px;">
+      <h2>সাম্প্রতিক প্রজেক্ট</h2>
+      <div id="projectsPreview"></div>
+    </section>
+
+    <section class="block">
+      <h2>সাম্প্রতিক ব্লগ</h2>
+      <div id="blogPreview"></div>
+    </section>
+  </div>
+
+  <nav class="bottom-nav glass">
+      <a href="home.html" class="active"><i data-lucide="home"></i><span>হোম</span></a>
+      <a href="project_p.html" class=""><i data-lucide="folder-kanban"></i><span>প্রজেক্ট</span></a>
+      <a href="contract.html" class=""><i data-lucide="message-circle"></i><span>চ্যাট</span></a>
+      <a href="blog_p.html" class=""><i data-lucide="file-text"></i><span>ব্লগ</span></a>
+      <a href="more.html" class=""><i data-lucide="more-horizontal"></i><span>মোর</span></a>
+  </nav>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import {
+      getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs, addDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
+      authDomain: "test-pro-portfolio.firebaseapp.com",
+      projectId: "test-pro-portfolio",
+      storageBucket: "test-pro-portfolio.firebasestorage.app",
+      messagingSenderId: "368597108521",
+      appId: "1:368597108521:web:ea84f26576e757ee3c5938",
+      measurementId: "G-70622PC5Q4",
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    lucide.createIcons();
+
+    /* ---- সার্চ — প্রজেক্ট পেজে রিডাইরেক্ট করে ---- */
+    document.getElementById("searchForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = document.getElementById("searchInput").value.trim();
+      if (q) window.location.href = "project_p.html?q=" + encodeURIComponent(q);
+    });
+
+    /* ---- সাইট তথ্য ---- */
+    try {
+      const snap = await getDoc(doc(db, "settings", "site"));
+      if (snap.exists()) {
+        const s = snap.data();
+        document.getElementById("brandName").textContent = s.siteTitle || "পোর্টফোলিও";
+        document.getElementById("heroName").textContent = s.siteTitle || "পোর্টফোলিও";
+        document.getElementById("heroTagline").textContent = s.tagline || "";
+        const social = document.getElementById("socialRow");
+        const links = [
+          ["mail", s.email ? "mailto:" + s.email : null],
+          ["facebook", s.facebook],
+          ["linkedin", s.linkedin],
+          ["github", s.github],
+        ];
+        links.forEach(([icon, url]) => {
+          if (!url) return;
+          const a = document.createElement("a");
+          a.href = url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.innerHTML = `<i data-lucide="${icon}"></i>`;
+          social.appendChild(a);
+        });
+        lucide.createIcons();
+      }
+    } catch (err) { console.warn("সেটিংস লোড ব্যর্থ:", err.message); }
+
+    /* ---- গড় রেটিং ---- */
+    try {
+      const snap = await getDocs(collection(db, "ratings"));
+      if (!snap.empty) {
+        let total = 0;
+        snap.forEach((d) => (total += d.data().stars || 0));
+        const avg = (total / snap.size).toFixed(1);
+        const badge = document.getElementById("ratingBadge");
+        badge.textContent = `⭐ ${avg} (${snap.size} রিভিউ)`;
+        badge.style.display = "inline-block";
+      }
+    } catch (err) { console.warn("রেটিং লোড ব্যর্থ:", err.message); }
+
+    /* ---- সাম্প্রতিক প্রজেক্ট ---- */
+    try {
+      const q = query(collection(db, "projects"), orderBy("createdAt", "desc"), limit(3));
+      const snap = await getDocs(q);
+      const el = document.getElementById("projectsPreview");
+      if (snap.empty) {
+        el.innerHTML = `<p class="empty-state">এখনো কোনো প্রজেক্ট নেই।</p>`;
+      } else {
+        el.innerHTML = snap.docs.map((d) => {
+          const p = d.data();
+          return `<a href="project_p.html" class="glass card" style="display:block;">
+            ${p.coverUrl ? `<img src="${p.coverUrl}" class="cover" />` : ""}
+            <h3>${escapeHtml(p.title || "")}</h3>
+            <p>${escapeHtml((p.description || "").slice(0, 100))}</p>
+          </a>`;
+        }).join("");
+      }
+    } catch (err) { console.warn("প্রজেক্ট লোড ব্যর্থ:", err.message); }
+
+    /* ---- সাম্প্রতিক ব্লগ ---- */
+    try {
+      const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"), limit(2));
+      const snap = await getDocs(q);
+      const el = document.getElementById("blogPreview");
+      const posts = snap.docs.map((d) => d.data()).filter((b) => b.status === "প্রকাশিত");
+      if (posts.length === 0) {
+        el.innerHTML = `<p class="empty-state">এখনো কোনো পোস্ট নেই।</p>`;
+      } else {
+        el.innerHTML = posts.map((b) => `<a href="blog_p.html" class="glass card" style="display:block;">
+            <h3>${escapeHtml(b.title || "")}</h3>
+            <p>${escapeHtml((b.excerpt || "").slice(0, 100))}</p>
+          </a>`).join("");
+      }
+    } catch (err) { console.warn("ব্লগ লোড ব্যর্থ:", err.message); }
+
+    function escapeHtml(s = "") {
+      return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    /* ---- এনালিটিক্স ট্র্যাকিং ---- */
+    function getVisitorId() {
+      let id = localStorage.getItem("visitor_id");
+      if (!id) {
+        id = "v_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        localStorage.setItem("visitor_id", id);
+      }
+      return id;
+    }
+    try {
+      await addDoc(collection(db, "analytics_events"), {
+        page: window.location.pathname,
+        referrer: document.referrer || "",
+        visitorId: getVisitorId(),
+        ts: serverTimestamp(),
+      });
+    } catch (err) {
+      console.warn("ভিজিট ট্র্যাক করা যায়নি:", err.message);
+    }
+  </script>
+</body>
+</html>
