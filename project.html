@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>প্রজেক্ট — এডমিন প্যানেল</title>
+<title>এনালিটিক্স — এডমিন প্যানেল</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 <style>
 /* ===== থিম টোকেন — Next.js স্টাইল ব্ল্যাক থিম ===== */
 :root {
@@ -18,13 +19,8 @@
   --text-muted: #8a8a8a;
   --text-faint: #5c5c5c;
   --accent: #3291ff;
-  --accent-soft: rgba(50, 145, 255, 0.14);
   --danger: #f5455c;
-  --danger-soft: rgba(245, 69, 92, 0.12);
   --success: #46c76b;
-  --success-soft: rgba(70, 199, 107, 0.12);
-  --warn: #f5a623;
-  --warn-soft: rgba(245, 166, 35, 0.12);
   --radius: 10px;
   --radius-lg: 16px;
 }
@@ -63,7 +59,6 @@ a { color: inherit; text-decoration: none; }
 .topbar .brand {
   font-weight: 600;
   font-size: 15px;
-  letter-spacing: -0.01em;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -73,7 +68,6 @@ a { color: inherit; text-decoration: none; }
   background: var(--accent);
   box-shadow: 0 0 12px var(--accent);
 }
-.topbar .actions { display: flex; align-items: center; gap: 10px; }
 
 /* ===== কন্টেন্ট এরিয়া ===== */
 .page {
@@ -81,20 +75,7 @@ a { color: inherit; text-decoration: none; }
   margin: 0 auto;
   padding: 32px 20px 40px;
 }
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-}
-.page-header h1 {
-  font-size: 22px;
-  font-weight: 600;
-  margin: 0;
-  letter-spacing: -0.02em;
-}
+.page-header h1 { font-size: 22px; font-weight: 600; margin: 0; }
 .page-sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
 
 /* ===== ফ্লোটিং ডক ন্যাভ ===== */
@@ -117,15 +98,12 @@ a { color: inherit; text-decoration: none; }
   gap: 6px;
   background: rgba(15, 15, 15, 0.88);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
   padding: 8px 12px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255,255,255,0.03);
-  max-width: 96vw;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
 }
 .dock a {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,29 +113,9 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-muted);
   transition: all .2s ease;
 }
-.dock a:hover { color: var(--text); background: rgba(255,255,255,0.08); transform: translateY(-2px); }
-.dock a.active {
-  background: #ffffff;
-  color: #000000;
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-}
-.dock a svg { width: 19px; height: 19px; flex-shrink: 0; }
-.dock a .badge-dot {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  min-width: 14px;
-  height: 14px;
-  padding: 0 3px;
-  border-radius: 999px;
-  background: var(--danger);
-  color: #fff;
-  font-size: 9px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.dock a:hover { color: var(--text); background: rgba(255,255,255,0.08); }
+.dock a.active { background: #ffffff; color: #000000; }
+.dock a svg { width: 19px; height: 19px; }
 
 /* ===== বাটন ===== */
 .btn {
@@ -167,40 +125,29 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--border);
   background: var(--bg-elevated);
   color: var(--text);
-  padding: 9px 16px;
+  padding: 8px 14px;
   border-radius: var(--radius);
-  font-size: 13.5px;
-  font-weight: 500;
+  font-size: 13px;
   cursor: pointer;
-  transition: all .15s ease;
 }
-.btn:hover { border-color: #3a3a3a; background: #141414; }
-.btn-primary { background: #ffffff; color: #000000; border-color: #ffffff; font-weight: 600; }
-.btn-primary:hover { background: #e4e4e4; }
-.btn-danger { color: var(--danger); border-color: var(--danger-soft); }
-.btn-danger:hover { background: var(--danger-soft); }
-.btn-sm { padding: 6px 12px; font-size: 12.5px; }
-.btn-icon { padding: 8px; border-radius: 8px; }
 
-/* ===== কার্ড / গ্রিড ===== */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; }
-.card {
+/* ===== স্ট্যাট কার্ড ===== */
+.stat-card {
   background: var(--bg-card);
   border: 1px solid var(--border-soft);
+  border-top: 2px solid var(--accent);
   border-radius: var(--radius-lg);
   padding: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: border-color .2s ease;
 }
-.card:hover { border-color: #2c2c2c; }
-.card-cover { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--border-soft); }
-.card h3 { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
-.card p { margin: 0 0 12px; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
-.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
-.card-actions { display: flex; gap: 6px; }
-.card-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+.stat-card .num { font-size: 28px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.stat-card .lbl { color: var(--text-muted); font-size: 12.5px; margin-top: 4px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+
+/* ===== এনালিটিক্স কার্ডস ===== */
+.chart-card { background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px; margin-top: 20px; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th, .table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border-soft); }
+.table th { color: var(--text-muted); font-weight: 500; font-size: 12px; }
 
 .empty-state {
   border: 1px dashed var(--border);
@@ -208,74 +155,9 @@ a { color: inherit; text-decoration: none; }
   padding: 60px 20px;
   text-align: center;
   color: var(--text-muted);
-  grid-column: 1 / -1;
 }
-.empty-state h3 { color: var(--text); font-weight: 600; margin-bottom: 6px; }
-
-/* ===== ব্যাজ ===== */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 9px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-}
-.badge-live { background: var(--success-soft); color: var(--success); }
-.badge-draft { background: var(--warn-soft); color: var(--warn); }
-
-/* ===== ফর্ম ===== */
-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-input, textarea, select {
-  width: 100%;
-  background: #0a0a0a;
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 13.5px;
-  font-family: inherit;
-  outline: none;
-}
-input:focus, textarea:focus, select:focus { border-color: var(--accent); }
-textarea { min-height: 90px; resize: vertical; }
-.field { margin-bottom: 14px; }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-@media (max-width: 640px) { .field-row { grid-template-columns: 1fr; } }
-.upload-preview { margin-top: 8px; display: flex; align-items: center; gap: 10px; background: #111; padding: 8px; border-radius: 8px; }
-.upload-preview img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; }
-
-/* ===== মোডাল ===== */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 200; padding: 16px;
-}
-.modal {
-  background: #0a0a0a;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  width: 100%; max-width: 520px;
-  max-height: 88vh;
-  display: flex; flex-direction: column;
-}
-.modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border-soft); }
-.modal-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
-.modal-body { padding: 20px; overflow-y: auto; }
-.modal-foot { padding: 16px 20px; border-top: 1px solid var(--border-soft); display: flex; justify-content: flex-end; gap: 10px; }
-
-/* ===== টোস্ট ===== */
-.toast-stack { position: fixed; bottom: 100px; right: 20px; z-index: 300; display: flex; flex-direction: column; gap: 8px; }
-.toast {
-  background: #fff; color: #000; padding: 11px 16px; border-radius: 10px;
-  font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-}
-
-.spinner { display: inline-block; width: 22px; height: 22px; border: 2px solid var(--border); border-top-color: var(--text); border-radius: 50%; animation: spin .7s linear infinite; }
+.spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--text); border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.center-loader { display: flex; align-items: center; justify-content: center; padding: 80px 0; }
-
 </style>
 </head>
 <body>
@@ -283,101 +165,51 @@ textarea { min-height: 90px; resize: vertical; }
   <div class="topbar">
     <div class="brand"><span class="dot"></span> এডমিন প্যানেল</div>
     <div class="actions">
-      <button class="btn btn-sm" id="logoutBtn">
-        <i data-lucide="log-out" style="width:14px;height:14px;"></i> লগ আউট
-      </button>
+      <button class="btn" id="logoutBtn"><i data-lucide="log-out" style="width:14px;height:14px;"></i> লগ আউট</button>
     </div>
   </div>
 
   <div class="page">
     <div class="page-header">
-      <div>
-        <h1>প্রজেক্টসমূহ</h1>
-        <p class="page-sub" id="countLabel">লোড হচ্ছে...</p>
-      </div>
-      <button class="btn btn-primary" id="newBtn">
-        <i data-lucide="plus" style="width:16px;height:16px;"></i> নতুন প্রজেক্ট
-      </button>
+      <h1>ভিজিটর এনালিটিক্স</h1>
+      <p class="page-sub">গত ১৪ দিনের ওয়েবসাইট ট্রাফিক রিপোর্ট</p>
     </div>
 
-    <div id="listArea">
-      <div class="center-loader"><span class="spinner"></span></div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="num" id="statTotal">—</div><div class="lbl">মোট ভিজিট</div></div>
+      <div class="stat-card"><div class="num" id="statUnique">—</div><div class="lbl">ইউনিক ভিজিটর</div></div>
+      <div class="stat-card"><div class="num" id="statToday">—</div><div class="lbl">আজকের ভিজিট</div></div>
+      <div class="stat-card"><div class="num" id="statTopPage">—</div><div class="lbl">জনপ্রিয় পেজ</div></div>
     </div>
-  </div>
 
-  <!-- ===== মোডাল ===== -->
-  <div class="modal-overlay" id="modalOverlay" style="display:none;">
-    <div class="modal">
-      <div class="modal-head">
-        <h3 id="modalTitle">নতুন প্রজেক্ট</h3>
-        <button class="btn btn-icon btn-sm" id="closeModal"><i data-lucide="x" style="width:16px;height:16px;"></i></button>
+    <div class="chart-card">
+      <h3 style="margin:0 0 14px;font-size:14px;font-weight:600;">দৈনিক ভিজিট (গত ১৪ দিন)</h3>
+      <canvas id="visitsChart" height="90"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3 style="margin:0 0 14px;font-size:14px;font-weight:600;">সাম্প্রতিক ভিজিট ট্রাফিক</h3>
+      <div style="overflow-x:auto;">
+        <table class="table" id="eventsTable">
+          <thead><tr><th>পেজ</th><th>রেফারার</th><th>সময়</th></tr></thead>
+          <tbody><tr><td colspan="3" style="text-align:center;"><span class="spinner"></span></td></tr></tbody>
+        </table>
       </div>
-      <div class="modal-body">
-        <div class="field">
-          <label>শিরোনাম *</label>
-          <input id="f_title" placeholder="প্রজেক্টের নাম লিখুন" />
-        </div>
-        <div class="field">
-          <label>বিবরণ</label>
-          <textarea id="f_description" placeholder="প্রজেক্টের বিস্তারিত তথ্য..."></textarea>
-        </div>
-        <div class="field">
-          <label>প্রযুক্তি (কমা দিয়ে আলাদা করুন)</label>
-          <input id="f_tech" placeholder="React, Node.js, Firebase" />
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label>লাইভ / রিপো লিংক</label>
-            <input id="f_link" placeholder="https://..." />
-          </div>
-          <div class="field">
-            <label>অবস্থা</label>
-            <select id="f_status">
-              <option value="সম্পন্ন">সম্পন্ন</option>
-              <option value="চলমান">চলমান</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label>স্ক্রিনশট / কভার ছবি</label>
-          <input type="file" id="f_cover" accept="image/*" />
-          <div class="upload-preview" id="coverPreview" style="display:none;">
-            <img id="coverPreviewImg" src="" alt="" />
-            <span id="coverStatus" style="font-size:12px;color:var(--text-muted);"></span>
-          </div>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button class="btn" id="cancelBtn">বাতিল</button>
-        <button class="btn btn-primary" id="saveBtn">সংরক্ষণ করুন</button>
-      </div>
+    </div>
+
+    <div class="empty-state" id="noDataNote" style="display:none;margin-top:16px;">
+      <h3>এখনো কোনো ভিজিট ট্র্যাক হয়নি</h3>
+      <p>আপনার পোর্টফোলিও সাইটে ভিজিটর আসলে এখানে লাইভ ডেটা দেখাবে।</p>
     </div>
   </div>
 
-  <!-- ===== মুছে ফেলার মোডাল ===== -->
-  <div class="modal-overlay" id="deleteModalOverlay" style="display:none;">
-    <div class="modal" style="max-width: 400px;">
-      <div class="modal-head">
-        <h3 style="color:var(--danger);">প্রজেক্ট মুছে ফেলার নিশ্চয়তা</h3>
-      </div>
-      <div class="modal-body">
-        <p style="margin:0; font-size:14px; color:var(--text-muted);">আপনি কি নিশ্চিত যে এই প্রজেক্টটি মুছে ফেলতে চান?</p>
-      </div>
-      <div class="modal-foot">
-        <button class="btn" id="cancelDeleteBtn">বাতিল</button>
-        <button class="btn btn-danger" id="confirmDeleteBtn">হ্যাঁ, মুছে ফেলুন</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== ফ্লোটিং ডক ন্যাভ ===== -->
   <div class="dock-wrap">
     <nav class="dock">
       <a href="admin.html"><i data-lucide="layout-dashboard"></i></a>
       <a href="blog.html"><i data-lucide="file-text"></i></a>
-      <a href="project.html" class="active"><i data-lucide="folder-kanban"></i></a>
-      <a href="inbox.html"><i data-lucide="message-square"></i><span id="inboxBadge" class="badge-dot" style="display:none;"></span></a>
-      <a href="analysis.html"><i data-lucide="bar-chart-3"></i></a>
+      <a href="project.html"><i data-lucide="folder-kanban"></i></a>
+      <a href="inbox.html"><i data-lucide="message-square"></i></a>
+      <a href="analysis.html" class="active"><i data-lucide="bar-chart-3"></i></a>
       <a href="setting.html"><i data-lucide="settings"></i></a>
     </nav>
   </div>
@@ -385,9 +217,8 @@ textarea { min-height: 90px; resize: vertical; }
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-    /* ---- Firebase ইনিশিয়ালাইজেশন ---- */
     const firebaseConfig = {
       apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
       authDomain: "test-pro-portfolio.firebaseapp.com",
@@ -401,158 +232,94 @@ textarea { min-height: 90px; resize: vertical; }
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    const cloudinaryConfig = {
-      cloudName: "dak8rgroe",
-      uploadPreset: "portfolio",
-    };
-
-    function guardPage() {
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          // window.location.href = "login.html";
-        }
-      });
-    }
-
-    async function logout() {
-      await signOut(auth);
-      window.location.href = "login.html";
-    }
-
-    function showToast(text) {
-      let stack = document.querySelector(".toast-stack");
-      if (!stack) {
-        stack = document.createElement("div");
-        stack.className = "toast-stack";
-        document.body.appendChild(stack);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // window.location.href = "login.html";
       }
-      const el = document.createElement("div");
-      el.className = "toast";
-      el.innerHTML = `<i data-lucide="check-circle-2" style="width:16px;height:16px;color:var(--success);"></i><span>${text}</span>`;
-      stack.appendChild(el);
-      lucide.createIcons();
-      setTimeout(() => el.remove(), 3500);
-    }
-
-    async function uploadToCloudinary(file, onProgress) {
-      const url = `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`;
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", cloudinaryConfig.uploadPreset);
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", url);
-        xhr.upload.onprogress = (e) => {
-          if (onProgress && e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
-        };
-        xhr.onload = () => {
-          try {
-            const data = JSON.parse(xhr.responseText);
-            if (data.secure_url) resolve(data.secure_url);
-            else reject(new Error(data.error?.message || "আপলোড ব্যর্থ হয়েছে"));
-          } catch (err) { reject(err); }
-        };
-        xhr.onerror = () => reject(new Error("নেটওয়ার্ক সমস্যা — আপলোড ব্যর্থ হয়েছে"));
-        xhr.send(formData);
-      });
-    }
-
-    const COLLECTION = "projects";
-    let items = [];
-    let editingId = null;
-    let deleteTargetId = null;
-    let pendingCoverUrl = "";
-
-    const listArea = document.getElementById("listArea");
-    const countLabel = document.getElementById("countLabel");
-    const overlay = document.getElementById("modalOverlay");
-    const deleteModalOverlay = document.getElementById("deleteModalOverlay");
-
-    onSnapshot(collection(db, COLLECTION), (snap) => {
-      items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-      items.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-      render();
-    }, (err) => {
-      listArea.innerHTML = `<div class="empty-state"><h3>ডেটা লোড করা যায়নি</h3><p>${err.message}</p></div>`;
     });
 
-    function render() {
-      countLabel.textContent = `মোট ${items.length} টি প্রজেক্ট`;
-      if (items.length === 0) {
-        listArea.innerHTML = `<div class="empty-state"><h3>এখনো কোনো প্রজেক্ট নেই</h3><p>নতুন প্রজেক্ট তৈরি করতে "নতুন প্রজেক্ট" বাটনে ক্লিক করুন।</p></div>`;
-        return;
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
+
+    lucide.createIcons();
+
+    try {
+      const snap = await getDocs(collection(db, "analytics_events"));
+      let events = snap.docs.map((d) => d.data());
+      
+      events.sort((a, b) => (b.ts?.seconds || 0) - (a.ts?.seconds || 0));
+
+      if (events.length === 0) {
+        document.getElementById("noDataNote").style.display = "block";
+        document.querySelector("#eventsTable tbody").innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);">কোনো ভিজিট ডেটা নেই</td></tr>`;
+      } else {
+        renderStats(events);
+        renderChart(events);
+        renderTable(events);
       }
-      listArea.innerHTML = `<div class="grid">${items.map(cardHtml).join("")}</div>`;
-      lucide.createIcons();
+    } catch (err) {
+      console.error(err);
+      document.querySelector("#eventsTable tbody").innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--danger);">ডেটা লোড করতে সমস্যা হয়েছে</td></tr>`;
     }
 
-    function cardHtml(it) {
-      const statusClass = it.status === "সম্পন্ন" ? "badge-live" : "badge-draft";
-      const techTags = (it.tech || "").split(",").map((t) => t.trim()).filter(Boolean);
-      return `
-        <div class="card">
-          <div>
-            ${it.coverUrl ? `<img src="${escapeHtml(it.coverUrl)}" class="card-cover" alt="Cover" />` : ""}
-            <div class="card-top">
-              <h3>${escapeHtml(it.title || "শিরোনামহীন")}</h3>
-              <div class="card-actions">
-                <button class="btn btn-icon btn-sm" data-edit="${it.id}"><i data-lucide="pencil" style="width:14px;height:14px;"></i></button>
-                <button class="btn btn-icon btn-sm btn-danger" data-delete="${it.id}"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></button>
-              </div>
-            </div>
-            ${it.description ? `<p>${escapeHtml(it.description)}</p>` : ""}
-          </div>
-          <div class="card-meta">
-            <span class="badge ${statusClass}">${it.status || "চলমান"}</span>
-            ${techTags.length ? `<span style="font-size:11px;color:var(--text-faint);">${escapeHtml(techTags.join(" · "))}</span>` : ""}
-          </div>
-        </div>`;
+    function renderStats(events) {
+      document.getElementById("statTotal").textContent = events.length;
+      document.getElementById("statUnique").textContent = new Set(events.map((e) => e.visitorId)).size;
+      
+      const todayStr = new Date().toDateString();
+      const todayCount = events.filter((e) => e.ts?.toDate && e.ts.toDate().toDateString() === todayStr).length;
+      document.getElementById("statToday").textContent = todayCount;
+
+      const pageCounts = {};
+      events.forEach((e) => (pageCounts[e.page || "/"] = (pageCounts[e.page || "/"] || 0) + 1));
+      const topPage = Object.entries(pageCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "/";
+      document.getElementById("statTopPage").textContent = topPage;
+      document.getElementById("statTopPage").style.fontSize = "16px";
+    }
+
+    function renderChart(events) {
+      const days = [];
+      const counts = [];
+      for (let i = 13; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        days.push(d.toLocaleDateString("bn-BD", { day: "2-digit", month: "2-digit" }));
+        const dayStr = d.toDateString();
+        counts.push(events.filter((e) => e.ts?.toDate && e.ts.toDate().toDateString() === dayStr).length);
+      }
+
+      new Chart(document.getElementById("visitsChart"), {
+        type: "bar",
+        data: {
+          labels: days,
+          datasets: [{ label: "ভিজিট", data: counts, backgroundColor: "#3291ff", borderRadius: 4 }],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: "#8a8a8a" }, grid: { display: false } },
+            y: { ticks: { color: "#8a8a8a", stepSize: 1 }, grid: { color: "#1a1a1a" } },
+          },
+        },
+      });
+    }
+
+    function renderTable(events) {
+      const rows = events.slice(0, 20).map((e) => `
+        <tr>
+          <td>${escapeHtml(e.page || "/")}</td>
+          <td style="color:var(--text-muted);">${escapeHtml(e.referrer || "সরাসরি")}</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted);">${e.ts?.toDate ? e.ts.toDate().toLocaleString("bn-BD") : "—"}</td>
+        </tr>`).join("");
+      document.querySelector("#eventsTable tbody").innerHTML = rows;
     }
 
     function escapeHtml(s = "") {
       return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     }
-
-    guardPage();
-    lucide.createIcons();
-    document.getElementById("logoutBtn").addEventListener("click", logout);
-    document.getElementById("newBtn").addEventListener("click", () => openModal(null));
-    document.getElementById("closeModal").addEventListener("click", closeModal);
-    document.getElementById("cancelBtn").addEventListener("click", closeModal);
-    document.getElementById("cancelDeleteBtn").addEventListener("click", () => deleteModalOverlay.style.display = "none");
-
-    listArea.addEventListener("click", (e) => {
-      const editBtn = e.target.closest("[data-edit]");
-      const delBtn = e.target.closest("[data-delete]");
-      if (editBtn) openModal(items.find((i) => i.id === editBtn.dataset.edit));
-      if (delBtn) {
-        deleteTargetId = delBtn.dataset.delete;
-        deleteModalOverlay.style.display = "flex";
-      }
-    });
-
-    document.getElementById("confirmDeleteBtn").addEventListener("click", async () => {
-      if (!deleteTargetId) return;
-      try {
-        await deleteDoc(doc(db, COLLECTION, deleteTargetId));
-        showToast("প্রজেক্ট মুছে ফেলা হয়েছে");
-      } catch (err) {
-        showToast("মুছে ফেলা সম্ভব হয়নি");
-      } finally {
-        deleteModalOverlay.style.display = "none";
-      }
-    });
-
-    function openModal(item) {
-      editingId = item ? item.id : null;
-      pendingCoverUrl = item?.coverUrl || "";
-      document.getElementById("modalTitle").textContent = item ? "প্রজেক্ট সম্পাদনা করুন" : "নতুন প্রজেক্ট";
-      document.getElementById("f_title").value = item?.title || "";
-      document.getElementById("f_description").value = item?.description || "";
-      document.getElementById("f_tech").value = item?.tech || "";
-      document.getElementById("f_link").value = item?.link || "";
-      document.getElementById("f_status").value = item?.status || "সম্পন্ন";
-      document.getElementById("f_cover").value = "";
-      const preview = document.getElementById("coverPreview");
-      if (pendingCoverUrl) {
-        preview.style.display = "
+  </script>
+</body>
+</html>
