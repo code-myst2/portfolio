@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>এনালিটিক্স — এডমিন প্যানেল</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" />
+<style>
+/* ===== থিম টোকেন — Next.js স্টাইল ব্ল্যাক থিম ===== */
+:root {
+  --bg: #000000;
+  --bg-elevated: #0a0a0a;
+  --bg-card: #0d0d0d;
+  --border: #232323;
+  --border-soft: #1a1a1a;
+  --text: #ededed;
+  --text-muted: #8a8a8a;
+  --text-faint: #5c5c5c;
+  --accent: #3291ff;
+  --accent-soft: rgba(50, 145, 255, 0.14);
+  --danger: #f5455c;
+  --danger-soft: rgba(245, 69, 92, 0.12);
+  --success: #46c76b;
+  --success-soft: rgba(70, 199, 107, 0.12);
+  --warn: #f5a623;
+  --warn-soft: rgba(245, 166, 35, 0.12);
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  padding-bottom: 110px; /* floating ডকের জন্য জায়গা */
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ===== টপবার ===== */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.topbar .brand {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.topbar .brand .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+.topbar .actions { display: flex; align-items: center; gap: 10px; }
+
+/* ===== কন্টেন্ট এরিয়া ===== */
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 36px 24px 40px;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.page-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+.page-sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+/* ===== ফ্লোটিং ডক ন্যাভ — উচ্চ দৃশ্যমানতা ===== */
+.dock-wrap {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 0 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.dock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 7px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255,255,255,0.02);
+  max-width: 96vw;
+  overflow-x: auto;
+}
+.dock::-webkit-scrollbar { display: none; }
+.dock a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color .15s ease, background .15s ease;
+}
+.dock a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+.dock a.active {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 600;
+}
+.dock a svg { width: 17px; height: 17px; flex-shrink: 0; }
+.dock a .badge-dot {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 640px) {
+  .dock a span.label { display: none; }
+  .dock a { padding: 12px; }
+}
+
+/* ===== বাটন ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  padding: 9px 15px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.btn:hover { border-color: #3a3a3a; background: #141414; }
+.btn-primary { background: #ffffff; color: #000000; border-color: #ffffff; }
+.btn-primary:hover { background: #e4e4e4; }
+.btn-danger { color: var(--danger); border-color: var(--danger-soft); }
+.btn-danger:hover { background: var(--danger-soft); }
+.btn-sm { padding: 6px 10px; font-size: 12.5px; }
+.btn-icon { padding: 8px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ===== কার্ড / গ্রিড ===== */
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+@media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  transition: border-color .15s ease;
+}
+.card:hover { border-color: #2c2c2c; }
+.card h3 { margin: 0 0 6px; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.card p { margin: 0; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.card-actions { display: flex; gap: 6px; }
+.card-meta { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+.empty-state {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+.empty-state h3 { color: var(--text); font-weight: 600; margin-bottom: 6px; }
+
+/* ===== ব্যাজ ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-live { background: var(--success-soft); color: var(--success); }
+.badge-draft { background: var(--warn-soft); color: var(--warn); }
+.badge-neutral { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+
+/* ===== ফর্ম ===== */
+label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+input, textarea, select {
+  width: 100%;
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .15s ease;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+textarea { min-height: 90px; resize: vertical; }
+.field { margin-bottom: 14px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .field-row { grid-template-columns: 1fr; } }
+.upload-preview { margin-top: 8px; display: flex; align-items: center; gap: 10px; }
+.upload-preview img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+
+/* ===== মোডাল ===== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 16px;
+}
+.modal {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  width: 100%; max-width: 520px;
+  max-height: 85vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; border-bottom: 1px solid var(--border-soft);
+}
+.modal-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.modal-body { padding: 18px 20px; overflow-y: auto; }
+.modal-foot { padding: 16px 20px; border-top: 1px solid var(--border-soft); display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ===== স্ট্যাট কার্ড ===== */
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-top: 2px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+}
+.stat-card .num { font-size: 30px; font-weight: 700; font-family: 'JetBrains Mono', monospace; letter-spacing: -0.02em; }
+.stat-card .lbl { color: var(--text-muted); font-size: 12.5px; margin-top: 4px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 720px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ===== ইনবক্স / চ্যাট ===== */
+.inbox-wrap {
+  display: flex;
+  height: calc(100vh - 220px);
+  min-height: 420px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.convo-list { width: 300px; flex-shrink: 0; border-right: 1px solid var(--border-soft); display: flex; flex-direction: column; }
+.convo-search { padding: 12px; border-bottom: 1px solid var(--border-soft); }
+.convo-items { flex: 1; overflow-y: auto; }
+.convo-item {
+  width: 100%; text-align: left; padding: 13px 16px; border: none; background: transparent;
+  border-bottom: 1px solid var(--border-soft); cursor: pointer; color: var(--text);
+}
+.convo-item:hover, .convo-item.active { background: #131313; }
+.convo-item .top-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.convo-item .name { font-size: 13.5px; font-weight: 600; }
+.convo-item .snippet { font-size: 12px; color: var(--text-muted); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.convo-item .time { font-size: 10px; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+.unread-pill { background: var(--danger); color: #fff; font-size: 10px; font-weight: 700; border-radius: 999px; padding: 1px 6px; }
+
+.chat-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.chat-head { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); }
+.chat-head .n { font-weight: 600; font-size: 14.5px; }
+.chat-head .e { font-size: 11.5px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+.chat-body { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.bubble { max-width: 70%; padding: 9px 14px; border-radius: 16px; font-size: 13.5px; line-height: 1.45; }
+.bubble.user { align-self: flex-start; background: #161616; border: 1px solid var(--border-soft); border-bottom-left-radius: 4px; }
+.bubble.admin { align-self: flex-end; background: #ffffff; color: #000; border-bottom-right-radius: 4px; }
+.bubble .t { font-size: 9.5px; margin-top: 4px; opacity: .55; font-family: 'JetBrains Mono', monospace; }
+.chat-input { border-top: 1px solid var(--border-soft); padding: 12px; display: flex; gap: 8px; }
+.chat-input input { border-radius: 999px; }
+.chat-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-direction: column; gap: 8px; }
+@media (max-width: 760px) {
+  .inbox-wrap { flex-direction: column; height: calc(100vh - 250px); }
+  .convo-list { width: 100%; height: 100%; }
+  .convo-list.hide-mobile { display: none; }
+  .chat-pane.hide-mobile { display: none; }
+}
+
+/* ===== টোস্ট ===== */
+.toast-stack { position: fixed; bottom: 110px; right: 18px; z-index: 300; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  background: #fff; color: #000; padding: 11px 16px; border-radius: 10px;
+  font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: toastIn .2s ease;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== লগইন পেজ ===== */
+.login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.login-card {
+  width: 100%; max-width: 380px; background: var(--bg-card);
+  border: 1px solid var(--border-soft); border-radius: var(--radius-lg); padding: 30px 26px;
+}
+.login-card h1 { font-size: 19px; margin: 0 0 4px; font-weight: 600; }
+.login-card p.sub { color: var(--text-muted); font-size: 13px; margin: 0 0 22px; }
+.login-error { color: var(--danger); font-size: 12.5px; margin-top: 10px; min-height: 16px; }
+
+/* ===== এনালিটিক্স ===== */
+.chart-card { background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th, .table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border-soft); }
+.table th { color: var(--text-muted); font-weight: 500; font-size: 12px; }
+.table td { color: var(--text); }
+
+.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--text); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.center-loader { display: flex; align-items: center; justify-content: center; padding: 60px 0; }
+
+</style>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span> এডমিন প্যানেল</div>
+    <div class="actions">
+      <button class="btn btn-sm" id="logoutBtn">লগ আউট</button>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="page-header"><div><h1>ভিজিটর এনালিটিক্স</h1><p class="page-sub">গত ১৪ দিনের ওয়েবসাইট ট্রাফিক</p></div></div>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="num" id="statTotal">—</div><div class="lbl">মোট ভিজিট</div></div>
+      <div class="stat-card"><div class="num" id="statUnique">—</div><div class="lbl">ইউনিক ভিজিটর</div></div>
+      <div class="stat-card"><div class="num" id="statToday">—</div><div class="lbl">আজকের ভিজিট</div></div>
+      <div class="stat-card"><div class="num" id="statTopPage">—</div><div class="lbl">সবচেয়ে জনপ্রিয় পেজ</div></div>
+    </div>
+
+    <div class="chart-card" style="margin-top:16px;">
+      <h3 style="margin:0 0 14px;font-size:14px;font-weight:600;">দৈনিক ভিজিট (গত ১৪ দিন)</h3>
+      <canvas id="visitsChart" height="90"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3 style="margin:0 0 14px;font-size:14px;font-weight:600;">সাম্প্রতিক ভিজিট</h3>
+      <div style="overflow-x:auto;">
+        <table class="table" id="eventsTable">
+          <thead><tr><th>পেজ</th><th>রেফারার</th><th>সময়</th></tr></thead>
+          <tbody><tr><td colspan="3"><span class="spinner"></span></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="empty-state" id="noDataNote" style="display:none;margin-top:16px;">
+      <h3>এখনো কোনো ভিজিট ট্র্যাক হয়নি</h3>
+      <p>আপনার পোর্টফোলিও সাইটের পেজগুলোতে <code>track.js</code> স্ক্রিপ্টটি যোগ করলে এখানে ডেটা দেখা যাবে।</p>
+    </div>
+  </div>
+
+  <!-- ===== ফ্লোটিং ডক ন্যাভ ===== -->
+  <div class="dock-wrap">
+    <nav class="dock">
+      <a href="admin.html"><i data-lucide="layout-dashboard"></i><span class="label">ড্যাশবোর্ড</span></a>
+      <a href="blog.html"><i data-lucide="file-text"></i><span class="label">ব্লগ</span></a>
+      <a href="project.html"><i data-lucide="folder-kanban"></i><span class="label">প্রজেক্ট</span></a>
+      <a href="inbox.html">
+        <i data-lucide="message-square"></i><span class="label">ইনবক্স</span>
+        <span id="inboxBadge" class="badge-dot" style="display:none;"></span>
+      </a>
+      <a href="analysis.html" class="active"><i data-lucide="bar-chart-3"></i><span class="label">এনালিটিক্স</span></a>
+      <a href="setting.html"><i data-lucide="settings"></i><span class="label">সেটিংস</span></a>
+    </nav>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import { getFirestore, collection, query, orderBy, limit, getDocs, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    /* ---- Firebase ইনিশিয়ালাইজেশন ---- */
+    const firebaseConfig = {
+      apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
+      authDomain: "test-pro-portfolio.firebaseapp.com",
+      projectId: "test-pro-portfolio",
+      storageBucket: "test-pro-portfolio.firebasestorage.app",
+      messagingSenderId: "368597108521",
+      appId: "1:368597108521:web:ea84f26576e757ee3c5938",
+      measurementId: "G-70622PC5Q4",
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+
+    /* ---- Auth guard ---- */
+    function guardPage() {
+      return new Promise((resolve) => {
+        onAuthStateChanged(auth, (user) => {
+          if (!user) {
+            window.location.href = "login.html";
+          } else {
+            resolve(user);
+          }
+        });
+      });
+    }
+    async function logout() {
+      await signOut(auth);
+      window.location.href = "login.html";
+    }
+
+
+    /* ---- ইনবক্স আনরিড ব্যাজ ---- */
+    function watchInboxBadge() {
+      const el = document.getElementById("inboxBadge");
+      if (!el) return;
+      const q = query(collection(db, "conversations"), where("unread", ">", 0));
+      onSnapshot(q, (snap) => {
+        let total = 0;
+        snap.forEach((doc) => (total += doc.data().unread || 0));
+        if (total > 0) {
+          el.textContent = total > 9 ? "9+" : total;
+          el.style.display = "flex";
+        } else {
+          el.style.display = "none";
+        }
+      });
+    }
+
+
+    await guardPage();
+    watchInboxBadge();
+    lucide.createIcons();
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+
+    const q = query(collection(db, "analytics_events"), orderBy("ts", "desc"), limit(1000));
+    const snap = await getDocs(q);
+    const events = snap.docs.map((d) => d.data()).filter((e) => e.ts?.toDate);
+
+    if (events.length === 0) {
+      document.getElementById("noDataNote").style.display = "block";
+    } else {
+      renderStats(events);
+      renderChart(events);
+      renderTable(events);
+    }
+
+    function renderStats(events) {
+      const total = events.length;
+      const uniqueVisitors = new Set(events.map((e) => e.visitorId)).size;
+      const todayStr = new Date().toDateString();
+      const today = events.filter((e) => e.ts.toDate().toDateString() === todayStr).length;
+
+      const pageCounts = {};
+      events.forEach((e) => (pageCounts[e.page || "/"] = (pageCounts[e.page || "/"] || 0) + 1));
+      const topPage = Object.entries(pageCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
+
+      document.getElementById("statTotal").textContent = total;
+      document.getElementById("statUnique").textContent = uniqueVisitors;
+      document.getElementById("statToday").textContent = today;
+      document.getElementById("statTopPage").textContent = topPage;
+      document.getElementById("statTopPage").style.fontSize = "16px";
+    }
+
+    function renderChart(events) {
+      const days = [];
+      const counts = [];
+      for (let i = 13; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const label = d.toLocaleDateString("bn-BD", { day: "2-digit", month: "2-digit" });
+        const dayStr = d.toDateString();
+        days.push(label);
+        counts.push(events.filter((e) => e.ts.toDate().toDateString() === dayStr).length);
+      }
+
+      new Chart(document.getElementById("visitsChart"), {
+        type: "bar",
+        data: {
+          labels: days,
+          datasets: [{
+            label: "ভিজিট",
+            data: counts,
+            backgroundColor: "#3291ff",
+            borderRadius: 4,
+            maxBarThickness: 28,
+          }],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: "#8a8a8a", font: { family: "JetBrains Mono", size: 10 } }, grid: { display: false } },
+            y: { ticks: { color: "#8a8a8a", stepSize: 1 }, grid: { color: "#1a1a1a" } },
+          },
+        },
+      });
+    }
+
+    function renderTable(events) {
+      const rows = events.slice(0, 30).map((e) => `
+        <tr>
+          <td>${escapeHtml(e.page || "/")}</td>
+          <td style="color:var(--text-muted);">${escapeHtml(e.referrer || "সরাসরি")}</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted);">${e.ts.toDate().toLocaleString("bn-BD")}</td>
+        </tr>`).join("");
+      document.querySelector("#eventsTable tbody").innerHTML = rows;
+    }
+
+    function escapeHtml(s = "") {
+      return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+  </script>
+</body>
+</html>

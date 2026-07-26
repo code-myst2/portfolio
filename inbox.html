@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ইনবক্স — এডমিন প্যানেল</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" />
+<style>
+/* ===== থিম টোকেন — Next.js স্টাইল ব্ল্যাক থিম ===== */
+:root {
+  --bg: #000000;
+  --bg-elevated: #0a0a0a;
+  --bg-card: #0d0d0d;
+  --border: #232323;
+  --border-soft: #1a1a1a;
+  --text: #ededed;
+  --text-muted: #8a8a8a;
+  --text-faint: #5c5c5c;
+  --accent: #3291ff;
+  --accent-soft: rgba(50, 145, 255, 0.14);
+  --danger: #f5455c;
+  --danger-soft: rgba(245, 69, 92, 0.12);
+  --success: #46c76b;
+  --success-soft: rgba(70, 199, 107, 0.12);
+  --warn: #f5a623;
+  --warn-soft: rgba(245, 166, 35, 0.12);
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  padding-bottom: 110px; /* floating ডকের জন্য জায়গা */
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ===== টপবার ===== */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.topbar .brand {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.topbar .brand .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+.topbar .actions { display: flex; align-items: center; gap: 10px; }
+
+/* ===== কন্টেন্ট এরিয়া ===== */
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 36px 24px 40px;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.page-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+.page-sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+/* ===== ফ্লোটিং ডক ন্যাভ — উচ্চ দৃশ্যমানতা ===== */
+.dock-wrap {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 0 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.dock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 7px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255,255,255,0.02);
+  max-width: 96vw;
+  overflow-x: auto;
+}
+.dock::-webkit-scrollbar { display: none; }
+.dock a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color .15s ease, background .15s ease;
+}
+.dock a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+.dock a.active {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 600;
+}
+.dock a svg { width: 17px; height: 17px; flex-shrink: 0; }
+.dock a .badge-dot {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 640px) {
+  .dock a span.label { display: none; }
+  .dock a { padding: 12px; }
+}
+
+/* ===== বাটন ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  padding: 9px 15px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.btn:hover { border-color: #3a3a3a; background: #141414; }
+.btn-primary { background: #ffffff; color: #000000; border-color: #ffffff; }
+.btn-primary:hover { background: #e4e4e4; }
+.btn-danger { color: var(--danger); border-color: var(--danger-soft); }
+.btn-danger:hover { background: var(--danger-soft); }
+.btn-sm { padding: 6px 10px; font-size: 12.5px; }
+.btn-icon { padding: 8px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ===== কার্ড / গ্রিড ===== */
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+@media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  transition: border-color .15s ease;
+}
+.card:hover { border-color: #2c2c2c; }
+.card h3 { margin: 0 0 6px; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.card p { margin: 0; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.card-actions { display: flex; gap: 6px; }
+.card-meta { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+.empty-state {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+.empty-state h3 { color: var(--text); font-weight: 600; margin-bottom: 6px; }
+
+/* ===== ব্যাজ ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-live { background: var(--success-soft); color: var(--success); }
+.badge-draft { background: var(--warn-soft); color: var(--warn); }
+.badge-neutral { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+
+/* ===== ফর্ম ===== */
+label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+input, textarea, select {
+  width: 100%;
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .15s ease;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+textarea { min-height: 90px; resize: vertical; }
+.field { margin-bottom: 14px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .field-row { grid-template-columns: 1fr; } }
+.upload-preview { margin-top: 8px; display: flex; align-items: center; gap: 10px; }
+.upload-preview img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+
+/* ===== মোডাল ===== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 16px;
+}
+.modal {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  width: 100%; max-width: 520px;
+  max-height: 85vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; border-bottom: 1px solid var(--border-soft);
+}
+.modal-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.modal-body { padding: 18px 20px; overflow-y: auto; }
+.modal-foot { padding: 16px 20px; border-top: 1px solid var(--border-soft); display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ===== স্ট্যাট কার্ড ===== */
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-top: 2px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+}
+.stat-card .num { font-size: 30px; font-weight: 700; font-family: 'JetBrains Mono', monospace; letter-spacing: -0.02em; }
+.stat-card .lbl { color: var(--text-muted); font-size: 12.5px; margin-top: 4px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 720px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ===== ইনবক্স / চ্যাট ===== */
+.inbox-wrap {
+  display: flex;
+  height: calc(100vh - 220px);
+  min-height: 420px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.convo-list { width: 300px; flex-shrink: 0; border-right: 1px solid var(--border-soft); display: flex; flex-direction: column; }
+.convo-search { padding: 12px; border-bottom: 1px solid var(--border-soft); }
+.convo-items { flex: 1; overflow-y: auto; }
+.convo-item {
+  width: 100%; text-align: left; padding: 13px 16px; border: none; background: transparent;
+  border-bottom: 1px solid var(--border-soft); cursor: pointer; color: var(--text);
+}
+.convo-item:hover, .convo-item.active { background: #131313; }
+.convo-item .top-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.convo-item .name { font-size: 13.5px; font-weight: 600; }
+.convo-item .snippet { font-size: 12px; color: var(--text-muted); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.convo-item .time { font-size: 10px; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+.unread-pill { background: var(--danger); color: #fff; font-size: 10px; font-weight: 700; border-radius: 999px; padding: 1px 6px; }
+
+.chat-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.chat-head { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); }
+.chat-head .n { font-weight: 600; font-size: 14.5px; }
+.chat-head .e { font-size: 11.5px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+.chat-body { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.bubble { max-width: 70%; padding: 9px 14px; border-radius: 16px; font-size: 13.5px; line-height: 1.45; }
+.bubble.user { align-self: flex-start; background: #161616; border: 1px solid var(--border-soft); border-bottom-left-radius: 4px; }
+.bubble.admin { align-self: flex-end; background: #ffffff; color: #000; border-bottom-right-radius: 4px; }
+.bubble .t { font-size: 9.5px; margin-top: 4px; opacity: .55; font-family: 'JetBrains Mono', monospace; }
+.chat-input { border-top: 1px solid var(--border-soft); padding: 12px; display: flex; gap: 8px; }
+.chat-input input { border-radius: 999px; }
+.chat-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-direction: column; gap: 8px; }
+@media (max-width: 760px) {
+  .inbox-wrap { flex-direction: column; height: calc(100vh - 250px); }
+  .convo-list { width: 100%; height: 100%; }
+  .convo-list.hide-mobile { display: none; }
+  .chat-pane.hide-mobile { display: none; }
+}
+
+/* ===== টোস্ট ===== */
+.toast-stack { position: fixed; bottom: 110px; right: 18px; z-index: 300; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  background: #fff; color: #000; padding: 11px 16px; border-radius: 10px;
+  font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: toastIn .2s ease;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== লগইন পেজ ===== */
+.login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.login-card {
+  width: 100%; max-width: 380px; background: var(--bg-card);
+  border: 1px solid var(--border-soft); border-radius: var(--radius-lg); padding: 30px 26px;
+}
+.login-card h1 { font-size: 19px; margin: 0 0 4px; font-weight: 600; }
+.login-card p.sub { color: var(--text-muted); font-size: 13px; margin: 0 0 22px; }
+.login-error { color: var(--danger); font-size: 12.5px; margin-top: 10px; min-height: 16px; }
+
+/* ===== এনালিটিক্স ===== */
+.chart-card { background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th, .table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border-soft); }
+.table th { color: var(--text-muted); font-weight: 500; font-size: 12px; }
+.table td { color: var(--text); }
+
+.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--text); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.center-loader { display: flex; align-items: center; justify-content: center; padding: 60px 0; }
+
+</style>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span> এডমিন প্যানেল</div>
+    <div class="actions">
+      <button class="btn btn-sm" id="logoutBtn">লগ আউট</button>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="page-header">
+      <div><h1>ইনবক্স</h1><p class="page-sub">ভিজিটরদের মেসেজের উত্তর দিন</p></div>
+    </div>
+
+    <div class="inbox-wrap">
+      <div class="convo-list" id="convoList">
+        <div class="convo-search">
+          <input type="text" id="searchInput" placeholder="নাম দিয়ে খুঁজুন..." />
+        </div>
+        <div class="convo-items" id="convoItems">
+          <div class="center-loader"><span class="spinner"></span></div>
+        </div>
+      </div>
+      <div class="chat-pane hide-mobile" id="chatPane">
+        <div class="chat-empty">
+          <i data-lucide="inbox"></i>
+          <span>একটি কথোপকথন বাছাই করুন</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ফ্লোটিং ডক ন্যাভ ===== -->
+  <div class="dock-wrap">
+    <nav class="dock">
+      <a href="admin.html"><i data-lucide="layout-dashboard"></i><span class="label">ড্যাশবোর্ড</span></a>
+      <a href="blog.html"><i data-lucide="file-text"></i><span class="label">ব্লগ</span></a>
+      <a href="project.html"><i data-lucide="folder-kanban"></i><span class="label">প্রজেক্ট</span></a>
+      <a href="inbox.html" class="active">
+        <i data-lucide="message-square"></i><span class="label">ইনবক্স</span>
+        <span id="inboxBadge" class="badge-dot" style="display:none;"></span>
+      </a>
+      <a href="analysis.html"><i data-lucide="bar-chart-3"></i><span class="label">এনালিটিক্স</span></a>
+      <a href="setting.html"><i data-lucide="settings"></i><span class="label">সেটিংস</span></a>
+    </nav>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, orderBy, query, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    /* ---- Firebase ইনিশিয়ালাইজেশন ---- */
+    const firebaseConfig = {
+      apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
+      authDomain: "test-pro-portfolio.firebaseapp.com",
+      projectId: "test-pro-portfolio",
+      storageBucket: "test-pro-portfolio.firebasestorage.app",
+      messagingSenderId: "368597108521",
+      appId: "1:368597108521:web:ea84f26576e757ee3c5938",
+      measurementId: "G-70622PC5Q4",
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+
+    /* ---- Auth guard ---- */
+    function guardPage() {
+      return new Promise((resolve) => {
+        onAuthStateChanged(auth, (user) => {
+          if (!user) {
+            window.location.href = "login.html";
+          } else {
+            resolve(user);
+          }
+        });
+      });
+    }
+    async function logout() {
+      await signOut(auth);
+      window.location.href = "login.html";
+    }
+
+
+    /* ---- ইনবক্স আনরিড ব্যাজ ---- */
+    function watchInboxBadge() {
+      const el = document.getElementById("inboxBadge");
+      if (!el) return;
+      const q = query(collection(db, "conversations"), where("unread", ">", 0));
+      onSnapshot(q, (snap) => {
+        let total = 0;
+        snap.forEach((doc) => (total += doc.data().unread || 0));
+        if (total > 0) {
+          el.textContent = total > 9 ? "9+" : total;
+          el.style.display = "flex";
+        } else {
+          el.style.display = "none";
+        }
+      });
+    }
+
+
+    /* ---- টোস্ট নোটিফিকেশন ---- */
+    function showToast(text) {
+      let stack = document.querySelector(".toast-stack");
+      if (!stack) {
+        stack = document.createElement("div");
+        stack.className = "toast-stack";
+        document.body.appendChild(stack);
+      }
+      const el = document.createElement("div");
+      el.className = "toast";
+      el.innerHTML = `<span>🔔</span><span>${text}</span>`;
+      stack.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }
+
+
+    await guardPage();
+    watchInboxBadge();
+    lucide.createIcons();
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+
+    const convoItemsEl = document.getElementById("convoItems");
+    const convoListEl = document.getElementById("convoList");
+    const chatPaneEl = document.getElementById("chatPane");
+    const searchInput = document.getElementById("searchInput");
+
+    let conversations = [];
+    let activeId = null;
+    let unsubMessages = null;
+
+    const convoQuery = query(collection(db, "conversations"), orderBy("lastTs", "desc"));
+    onSnapshot(convoQuery, (snap) => {
+      conversations = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      renderConvoList();
+    }, (err) => {
+      convoItemsEl.innerHTML = `<div class="empty-state"><h3>লোড করা যায়নি</h3><p>${err.message}</p></div>`;
+    });
+
+    searchInput.addEventListener("input", renderConvoList);
+
+    function renderConvoList() {
+      const term = searchInput.value.trim().toLowerCase();
+      const filtered = conversations.filter((c) => (c.name || "").toLowerCase().includes(term));
+      if (filtered.length === 0) {
+        convoItemsEl.innerHTML = `<div class="empty-state" style="padding:30px 14px;"><p>কোনো কথোপকথন নেই</p></div>`;
+        return;
+      }
+      convoItemsEl.innerHTML = filtered.map((c) => `
+        <button class="convo-item ${c.id === activeId ? "active" : ""}" data-id="${c.id}">
+          <div class="top-row">
+            <span class="name">${escapeHtml(c.name || "অজানা")}</span>
+            ${c.unread ? `<span class="unread-pill">${c.unread}</span>` : `<span class="time">${timeAgo(c.lastTs)}</span>`}
+          </div>
+          <div class="snippet">${escapeHtml(c.lastMessage || "")}</div>
+        </button>
+      `).join("");
+      convoItemsEl.querySelectorAll("[data-id]").forEach((btn) => {
+        btn.addEventListener("click", () => openConversation(btn.dataset.id));
+      });
+    }
+
+    function openConversation(id) {
+      activeId = id;
+      const convo = conversations.find((c) => c.id === id);
+      if (!convo) return;
+
+      // মোবাইলে চ্যাট প্যান দেখাও, লিস্ট লুকাও
+      convoListEl.classList.add("hide-mobile");
+      chatPaneEl.classList.remove("hide-mobile");
+
+      if (convo.unread) {
+        updateDoc(doc(db, "conversations", id), { unread: 0 }).catch(() => {});
+      }
+
+      chatPaneEl.innerHTML = `
+        <div class="chat-head" style="display:flex;align-items:center;gap:8px;">
+          <button class="btn btn-icon btn-sm mobile-back" id="backBtn" style="display:none;"><i data-lucide="chevron-left"></i></button>
+          <div>
+            <div class="n">${escapeHtml(convo.name || "অজানা")}</div>
+            <div class="e">${escapeHtml(convo.email || "")}</div>
+          </div>
+        </div>
+        <div class="chat-body" id="chatBody"><div class="center-loader"><span class="spinner"></span></div></div>
+        <div class="chat-input">
+          <input type="text" id="msgInput" placeholder="উত্তর লিখুন..." />
+          <button class="btn btn-primary btn-icon" id="sendBtn"><i data-lucide="send"></i></button>
+        </div>
+      `;
+      lucide.createIcons();
+
+      document.getElementById("backBtn").style.display = window.innerWidth < 760 ? "inline-flex" : "none";
+      document.getElementById("backBtn").addEventListener("click", () => {
+        chatPaneEl.classList.add("hide-mobile");
+        convoListEl.classList.remove("hide-mobile");
+      });
+
+      if (unsubMessages) unsubMessages();
+      const msgQuery = query(collection(db, "conversations", id, "messages"), orderBy("ts", "asc"));
+      unsubMessages = onSnapshot(msgQuery, (snap) => {
+        const messages = snap.docs.map((d) => d.data());
+        const body = document.getElementById("chatBody");
+        if (!body) return;
+        body.innerHTML = messages.map((m) => `
+          <div class="bubble ${m.from === "admin" ? "admin" : "user"}">
+            <div>${escapeHtml(m.text)}</div>
+            <div class="t">${formatTime(m.ts)}</div>
+          </div>
+        `).join("");
+        body.scrollTop = body.scrollHeight;
+      });
+
+      const send = async () => {
+        const input = document.getElementById("msgInput");
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = "";
+        try {
+          await addDoc(collection(db, "conversations", id, "messages"), {
+            from: "admin", text, ts: serverTimestamp(),
+          });
+          await updateDoc(doc(db, "conversations", id), {
+            lastMessage: text, lastTs: serverTimestamp(),
+          });
+        } catch (err) {
+          showToast("পাঠানো যায়নি: " + err.message);
+        }
+      };
+      document.getElementById("sendBtn").addEventListener("click", send);
+      document.getElementById("msgInput").addEventListener("keydown", (e) => e.key === "Enter" && send());
+    }
+
+    function escapeHtml(s = "") {
+      return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+    function timeAgo(ts) {
+      if (!ts?.toDate) return "";
+      const diff = Math.max(0, Date.now() - ts.toDate().getTime());
+      const m = Math.floor(diff / 60000);
+      if (m < 1) return "এখনই";
+      if (m < 60) return `${m} মিনিট`;
+      const h = Math.floor(m / 60);
+      if (h < 24) return `${h} ঘণ্টা`;
+      return `${Math.floor(h / 24)} দিন`;
+    }
+    function formatTime(ts) {
+      if (!ts?.toDate) return "";
+      return ts.toDate().toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" });
+    }
+
+  </script>
+</body>
+</html>
