@@ -3,21 +3,20 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>যোগাযোগ — পোর্টফোলিও</title>
+<title>যোগাযোগ ও লাইভ চ্যাট — পোর্টফোলিও</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <style>
     :root {
-      --bg-overlay: rgba(5, 5, 10, 0.55);
+      --bg-overlay: rgba(5, 5, 10, 0.65);
       --glass: rgba(255, 255, 255, 0.08);
       --glass-strong: rgba(255, 255, 255, 0.14);
       --glass-border: rgba(255, 255, 255, 0.18);
       --text: #f5f5f7;
       --text-faint: rgba(245, 245, 247, 0.65);
-      --accent: #d4af37;
-      --accent-soft: rgba(212, 175, 55, 0.25);
+      --accent: #ffffff;
       --radius: 20px;
-      --radius-sm: 14px;
+      --radius-sm: 12px;
     }
     * { box-sizing: border-box; }
     html, body {
@@ -29,10 +28,9 @@
     }
     body {
       background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url("bg.jpg") center/cover fixed no-repeat, #0a0a0f;
-      padding: 84px 16px 100px;
+      padding: 68px 16px 100px;
     }
     a { color: inherit; text-decoration: none; }
-    ::placeholder { color: var(--text-faint); }
 
     .glass {
       background: var(--glass);
@@ -42,40 +40,34 @@
       border-radius: var(--radius);
     }
 
-    /* ---- টপবার ---- */
+    /* ---- চিকন ও মার্জিত টপবার ---- */
     .topbar {
       position: fixed;
       top: 0; left: 0; right: 0;
-      height: 64px;
+      height: 52px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       padding: 0 16px;
-      background: rgba(10, 10, 15, 0.55);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      background: rgba(10, 10, 15, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--glass-border);
       z-index: 50;
     }
-    .topbar .brand {
-      font-weight: 700;
-      font-size: 17px;
-      letter-spacing: 0.2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .topbar .brand { font-weight: 700; font-size: 15px; letter-spacing: 0.3px; }
     .search-wrap {
       flex: 1;
-      max-width: 340px;
+      max-width: 210px;
+      height: 30px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: var(--glass);
       border: 1px solid var(--glass-border);
       border-radius: 999px;
-      padding: 8px 14px;
+      padding: 0 10px;
     }
     .search-wrap input {
       flex: 1;
@@ -83,156 +75,180 @@
       border: none;
       outline: none;
       color: var(--text);
-      font-size: 14px;
+      font-size: 12px;
       font-family: inherit;
     }
-    .search-wrap i { width: 16px; height: 16px; color: var(--text-faint); flex-shrink: 0; }
+    .search-wrap i { width: 13px; height: 13px; color: var(--text-faint); flex-shrink: 0; }
+
+    .container { max-width: 680px; margin: 0 auto; }
+
+    /* ---- সম্পূর্ণ ট্রান্সপারেন্ট চ্যাট বক্স ---- */
+    .chat-container-transparent {
+      background: var(--glass);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    }
+    .chat-box {
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 6px;
+    }
+    .msg { max-width: 80%; padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.45; }
+    .msg.me { align-self: flex-end; background: #ffffff; color: #000000; font-weight: 500; border-bottom-right-radius: 2px; }
+    .msg.other { align-self: flex-start; background: var(--glass-strong); border: 1px solid var(--glass-border); border-bottom-left-radius: 2px; }
+    
+    .chat-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 5px 6px 5px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--glass-border);
+    }
+    .chat-input-row input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 13.5px;
+      font-family: inherit;
+    }
+    .btn-circle-send {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: none;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+      flex-shrink: 0;
+    }
+    .btn-circle-send:active { transform: scale(0.9); }
+
+    /* ---- সোশ্যাল লিঙ্ক সেকশন (সম্পূর্ণ গ্লাস ট্রান্সপারেন্ট) ---- */
+    .section-title { font-size: 13px; font-weight: 600; color: var(--text-faint); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.6px; }
+    .social-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .social-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .social-item:hover { background: var(--glass-strong); border-color: rgba(255,255,255,0.3); }
+    .social-info { display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; }
+    .social-info i { color: var(--text); }
+
+    /* ---- FAQ সেকশন ---- */
+    .faq-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .faq-item {
+      padding: 14px 16px;
+    }
+    .faq-item h4 { margin: 0 0 6px; font-size: 14px; color: #fff; }
+    .faq-item p { margin: 0; font-size: 12.5px; color: var(--text-faint); line-height: 1.5; }
+
+    /* ---- সাইন-আপ পপ-আপ মোডাল ---- */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-card {
+      background: rgba(15, 15, 20, 0.95);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      width: 100%; max-width: 360px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
+    .modal-card h3 { margin: 0 0 6px; font-size: 18px; text-align: center; }
+    .modal-card p { font-size: 12px; color: var(--text-faint); text-align: center; margin-bottom: 18px; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: #fff; cursor: pointer; }
+    
+    .auth-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      font-family: inherit;
+    }
+    .auth-btn:hover { background: rgba(255, 255, 255, 0.15); }
+    .divider { text-align: center; font-size: 11px; color: var(--text-faint); margin: 12px 0; }
+    
+    .auth-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 13px;
+      margin-bottom: 10px;
+      outline: none;
+      font-family: inherit;
+    }
 
     /* ---- বটম ন্যাভ ---- */
     .bottom-nav {
       position: fixed;
-      bottom: 14px;
-      left: 50%;
+      bottom: 14px; left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      gap: 4px;
-      padding: 8px;
+      display: flex; gap: 4px; padding: 6px;
       z-index: 50;
       width: min(420px, calc(100% - 24px));
     }
     .bottom-nav a {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      padding: 8px 4px;
-      border-radius: var(--radius-sm);
-      font-size: 10px;
-      color: var(--text-faint);
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 8px 4px; border-radius: 12px; font-size: 10px; color: var(--text-faint);
       transition: background 0.15s, color 0.15s;
     }
-    .bottom-nav a i { width: 20px; height: 20px; }
-    .bottom-nav a.active {
-      color: var(--accent);
-      background: var(--accent-soft);
-    }
-
-    .container { max-width: 720px; margin: 0 auto; }
-
-    .avatar {
-      width: 96px; height: 96px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--glass-border);
-      box-shadow: 0 0 0 6px var(--accent-soft);
-      display: block;
-      margin: 0 auto 16px;
-    }
-
-    .card {
-      padding: 18px;
-      margin-bottom: 14px;
-    }
-    .card h3 { margin: 0 0 6px; font-size: 16px; }
-    .card p { margin: 0; color: var(--text-faint); font-size: 13.5px; line-height: 1.6; }
-    .cover {
-      width: 100%; height: 150px; object-fit: cover;
-      border-radius: var(--radius-sm);
-      margin-bottom: 12px;
-      border: 1px solid var(--glass-border);
-    }
-    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .tag {
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: var(--glass-strong);
-      border: 1px solid var(--glass-border);
-      color: var(--text-faint);
-    }
-    .badge {
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    h1.hero-title { text-align: center; font-size: 24px; margin: 4px 0 4px; }
-    p.hero-tagline { text-align: center; color: var(--text-faint); margin: 0 0 20px; font-size: 14px; }
-
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 12px 20px;
-      border-radius: 999px;
-      border: 1px solid var(--glass-border);
-      background: var(--glass-strong);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-accent {
-      background: var(--accent);
-      color: #1a1400;
-      border-color: var(--accent);
-    }
-    .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
-
-    .social-row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
-    .social-row a {
-      width: 40px; height: 40px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 50%;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-    }
-    .social-row a i { width: 18px; height: 18px; }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--glass-border);
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      margin-bottom: 12px;
-    }
-    label { font-size: 12px; color: var(--text-faint); display: block; margin-bottom: 6px; }
-
-    .empty-state { text-align: center; padding: 40px 12px; color: var(--text-faint); }
-
-    .star-row { display: flex; gap: 4px; margin: 6px 0; }
-    .star-row i { width: 15px; height: 15px; color: var(--accent); }
-
-    section.block { margin-bottom: 28px; }
-    section.block h2 {
-      font-size: 15px;
-      margin: 0 0 12px;
-      color: var(--text-faint);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-
-    /* ---- চ্যাট ---- */
-    .chat-box { display: flex; flex-direction: column; height: 46vh; }
-    .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px; }
-    .msg { max-width: 78%; padding: 9px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; }
-    .msg.me { align-self: flex-end; background: var(--accent); color: #1a1400; border-bottom-right-radius: 4px; }
-    .msg.other { align-self: flex-start; background: var(--glass-strong); border-bottom-left-radius: 4px; }
-    .chat-input-row { display: flex; gap: 8px; margin-top: 10px; }
-    .chat-input-row input { margin-bottom: 0; }
+    .bottom-nav a.active { color: var(--accent); background: rgba(255, 255, 255, 0.12); }
+    .bottom-nav a i { width: 18px; height: 18px; }
 </style>
 </head>
 <body>
+
+  <!-- টপবার -->
   <div class="topbar">
-    <div class="brand" id="brandName">পোর্টফোলিও</div>
+    <div class="brand">CodeMyst</div>
     <form class="search-wrap" id="searchForm">
       <i data-lucide="search"></i>
       <input type="text" id="searchInput" placeholder="খুঁজুন..." autocomplete="off" />
@@ -240,66 +256,94 @@
   </div>
 
   <div class="container">
-    <h1 class="hero-title">যোগাযোগ</h1>
-    <p class="hero-tagline">সরাসরি চ্যাট করুন অথবা হায়ার রিকোয়েস্ট পাঠান</p>
-
-    <section class="block">
-      <h2><i data-lucide="briefcase" style="width:14px;height:14px;vertical-align:-2px;"></i> হায়ার রিকোয়েস্ট</h2>
-      <div class="glass card">
-        <label>নাম</label>
-        <input type="text" id="hireName" placeholder="আপনার নাম" />
-        <label>ইমেইল</label>
-        <input type="email" id="hireEmail" placeholder="you@example.com" />
-        <label>প্রজেক্টের ধরন</label>
-        <select id="hireType">
-          <option value="ওয়েবসাইট">ওয়েবসাইট</option>
-          <option value="ওয়েব অ্যাপ">ওয়েব অ্যাপ</option>
-          <option value="মেশিন লার্নিং">মেশিন লার্নিং</option>
-          <option value="অন্যান্য">অন্যান্য</option>
-        </select>
-        <label>আনুমানিক বাজেট</label>
-        <input type="text" id="hireBudget" placeholder="যেমন: ৳৫,০০০ – ১০,০০০" />
-        <label>বিস্তারিত</label>
-        <textarea id="hireMessage" rows="3" placeholder="আপনার প্রজেক্ট সম্পর্কে লিখুন..."></textarea>
-        <button class="btn btn-accent" id="hireSubmitBtn" style="width:100%;">
-          <i data-lucide="send"></i> রিকোয়েস্ট পাঠান
-        </button>
-        <p id="hireStatus" style="text-align:center;font-size:12.5px;margin-top:10px;color:var(--text-faint);"></p>
-      </div>
-    </section>
-
-    <section class="block">
-      <h2><i data-lucide="message-circle" style="width:14px;height:14px;vertical-align:-2px;"></i> লাইভ চ্যাট</h2>
-      <div class="glass card" id="preChatCard">
-        <label>নাম</label>
-        <input type="text" id="chatName" placeholder="আপনার নাম" />
-        <label>ইমেইল (ঐচ্ছিক)</label>
-        <input type="email" id="chatEmail" placeholder="you@example.com" />
-        <p style="font-size:12px;color:var(--text-faint);margin:0 0 4px;">নিচে মেসেজ লিখে চ্যাট শুরু করুন</p>
-      </div>
-      <div class="glass card chat-box" id="chatCard" style="display:none;">
-        <div class="chat-messages" id="chatMessages"></div>
+    
+    <!-- সম্পূর্ণ ট্রান্সপারেন্ট চ্যাট বক্স -->
+    <div class="chat-container-transparent">
+      <div class="chat-box">
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg other">হ্যালো! কোনো সাহায্য লাগবে? নিচে মেসেজ দিয়ে চ্যাট শুরু করুন।</div>
+        </div>
       </div>
       <div class="chat-input-row">
-        <input type="text" id="chatInput" placeholder="মেসেজ লিখুন..." />
-        <button class="btn btn-accent" id="chatSendBtn"><i data-lucide="send"></i></button>
+        <input type="text" id="chatInput" placeholder="মেসেজ টাইপ করুন..." />
+        <button class="btn-circle-send" id="chatSendBtn" title="পাঠান">
+          <i data-lucide="send" style="width:16px;height:16px;"></i>
+        </button>
       </div>
-    </section>
+    </div>
+
+    <!-- সোশ্যাল লিঙ্কসমূহ -->
+    <div class="section-title">সোশ্যাল মিডিয়া প্রোফাইল</div>
+    <div class="social-list">
+      <a href="https://github.com" target="_blank" class="social-item">
+        <div class="social-info"><i data-lucide="github"></i> GitHub Profile</div>
+        <i data-lucide="external-link" style="width:15px;height:15px;"></i>
+      </a>
+      <a href="https://t.me" target="_blank" class="social-item">
+        <div class="social-info"><i data-lucide="send"></i> Telegram Channel</div>
+        <i data-lucide="external-link" style="width:15px;height:15px;"></i>
+      </a>
+      <a href="https://youtube.com" target="_blank" class="social-item">
+        <div class="social-info"><i data-lucide="youtube"></i> YouTube Channel</div>
+        <i data-lucide="external-link" style="width:15px;height:15px;"></i>
+      </a>
+      <a href="https://facebook.com" target="_blank" class="social-item">
+        <div class="social-info"><i data-lucide="facebook"></i> Facebook Page</div>
+        <i data-lucide="external-link" style="width:15px;height:15px;"></i>
+      </a>
+    </div>
+
+    <!-- FAQ সেকশন -->
+    <div class="section-title">সাধারণ প্রশ্নাবলী (FAQ)</div>
+    <div class="faq-list">
+      <div class="glass faq-item">
+        <h4>১. সাধারণত কত সময়ের মধ্যে মেসেজের উত্তর পাওয়া যায়?</h4>
+        <p>লাইভ চ্যাটে মেসেজ পাঠালে খুব দ্রুত অথবা সর্বোচ্চ ২৪ ঘণ্টার মধ্যে উত্তর দেওয়া হয়।</p>
+      </div>
+      <div class="glass faq-item">
+        <h4>২. আগের চ্যাট হিস্ট্রি কীভাবে সংরক্ষিত থাকে?</h4>
+        <p>সাইন ইন করার পর আপনার বার্তাগুলো ফায়ারবেসে অ্যাকাউন্টের সাথে যুক্ত থাকে, ফলে পরবর্তীতেও বার্তাগুলো পাবেন।</p>
+      </div>
+    </div>
+
   </div>
 
+  <!-- সাইন-আপ পপ-আপ মোডাল -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeModal"><i data-lucide="x"></i></button>
+      <h3>সাইন ইন / সাইন আপ</h3>
+      <p>মেসেজ পাঠাতে এবং আগের মেসেজ সংরক্ষিত রাখতে অ্যাকাউন্টে প্রবেশ করুন</p>
+      
+      <button class="auth-btn" id="googleAuthBtn"><i data-lucide="chrome"></i> Google দিয়ে প্রবেশ করুন</button>
+      <button class="auth-btn" id="appleAuthBtn"><i data-lucide="apple"></i> Apple দিয়ে প্রবেশ করুন</button>
+
+      <div class="divider">অথবা ইমেইল ব্যবহার করুন</div>
+
+      <input type="email" id="modalEmail" class="auth-input" placeholder="আপনার ইমেইল" />
+      <input type="password" id="modalPassword" class="auth-input" placeholder="পাসওয়ার্ড" />
+      <button class="auth-btn" id="emailAuthBtn" style="background: #ffffff; color: #000000; font-weight: 600;">কন্টিনিউ করুন</button>
+    </div>
+  </div>
+
+  <!-- বটম ন্যাভ -->
   <nav class="bottom-nav glass">
-      <a href="home.html" class=""><i data-lucide="home"></i><span>হোম</span></a>
-      <a href="project_p.html" class=""><i data-lucide="folder-kanban"></i><span>প্রজেক্ট</span></a>
+      <a href="home.html"><i data-lucide="home"></i><span>হোম</span></a>
+      <a href="project_p.html"><i data-lucide="folder-kanban"></i><span>প্রজেক্ট</span></a>
       <a href="contract.html" class="active"><i data-lucide="message-circle"></i><span>চ্যাট</span></a>
-      <a href="blog_p.html" class=""><i data-lucide="file-text"></i><span>ব্লগ</span></a>
-      <a href="more.html" class=""><i data-lucide="more-horizontal"></i><span>মোর</span></a>
+      <a href="blog_p.html"><i data-lucide="file-text"></i><span>ব্লগ</span></a>
+      <a href="more.html"><i data-lucide="more-horizontal"></i><span>মোর</span></a>
   </nav>
 
+  <!-- Firebase JavaScript Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-    import {
-      getFirestore, doc, getDoc, collection, addDoc, updateDoc, onSnapshot,
-      orderBy, query, serverTimestamp, increment
+    import { 
+      getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, 
+      signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import { 
+      getFirestore, collection, addDoc, doc, setDoc, onSnapshot, orderBy, query, serverTimestamp, increment 
     } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -311,70 +355,49 @@
       appId: "1:368597108521:web:ea84f26576e757ee3c5938",
       measurementId: "G-70622PC5Q4",
     };
+    
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     lucide.createIcons();
 
-    /* ---- টপবারে siteTitle বসানো ---- */
-    getDoc(doc(db, "settings", "site")).then((snap) => {
-      if (snap.exists() && snap.data().siteTitle) {
-        document.getElementById("brandName").textContent = snap.data().siteTitle;
-      }
-    }).catch(() => {});
+    let currentUser = null;
+    let convoId = localStorage.getItem("chat_convo_id");
+    let unsubMessages = null;
 
-    function escapeHtml(s = "") {
-      return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-    }
+    const authModal = document.getElementById("authModal");
+    const closeModal = document.getElementById("closeModal");
 
-    /* ================= হায়ার রিকোয়েস্ট ফর্ম ================= */
-    document.getElementById("hireSubmitBtn").addEventListener("click", async () => {
-      const name = document.getElementById("hireName").value.trim();
-      const email = document.getElementById("hireEmail").value.trim();
-      const status = document.getElementById("hireStatus");
-      if (!name || !email) { status.textContent = "নাম আর ইমেইল আবশ্যক"; return; }
-      const payload = {
-        name, email,
-        projectType: document.getElementById("hireType").value,
-        budget: document.getElementById("hireBudget").value.trim(),
-        message: document.getElementById("hireMessage").value.trim(),
-        createdAt: serverTimestamp(),
-      };
-      try {
-        await addDoc(collection(db, "hire_requests"), payload);
-        status.textContent = "✓ রিকোয়েস্ট পাঠানো হয়েছে, শীঘ্রই যোগাযোগ করা হবে";
-        ["hireName","hireEmail","hireBudget","hireMessage"].forEach((id) => document.getElementById(id).value = "");
-      } catch (err) {
-        status.textContent = "পাঠানো যায়নি: " + err.message;
+    closeModal.addEventListener("click", () => authModal.classList.remove("open"));
+
+    // Auth state listener
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        authModal.classList.remove("open");
+        initUserChatSession(user);
       }
     });
 
-    /* ================= লাইভ চ্যাট ================= */
-    let convoId = localStorage.getItem("chat_convo_id");
-    let unsub = null;
-
-    if (localStorage.getItem("chat_name")) {
-      document.getElementById("chatName").value = localStorage.getItem("chat_name");
-    }
-    if (localStorage.getItem("chat_email")) {
-      document.getElementById("chatEmail").value = localStorage.getItem("chat_email");
-    }
-
-    if (convoId) showChatUI();
-
-    function showChatUI() {
-      document.getElementById("preChatCard").style.display = "none";
-      document.getElementById("chatCard").style.display = "flex";
-      if (unsub) unsub();
+    function initUserChatSession(user) {
+      convoId = user.uid;
+      localStorage.setItem("chat_convo_id", convoId);
+      
+      if (unsubMessages) unsubMessages();
       const q = query(collection(db, "conversations", convoId, "messages"), orderBy("ts", "asc"));
-      unsub = onSnapshot(q, (snap) => {
-        const el = document.getElementById("chatMessages");
-        el.innerHTML = snap.docs.map((d) => {
+      unsubMessages = onSnapshot(q, (snap) => {
+        const chatMessages = document.getElementById("chatMessages");
+        if(snap.empty) {
+          chatMessages.innerHTML = `<div class="msg other">হ্যালো ${escapeHtml(user.displayName || 'ইউজার')}! কীভাবে সাহায্য করতে পারি?</div>`;
+          return;
+        }
+        chatMessages.innerHTML = snap.docs.map((d) => {
           const m = d.data();
           const cls = m.from === "admin" ? "other" : "me";
           return `<div class="msg ${cls}">${escapeHtml(m.text || "")}</div>`;
         }).join("");
-        el.scrollTop = el.scrollHeight;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
       });
     }
 
@@ -382,65 +405,62 @@
       const input = document.getElementById("chatInput");
       const text = input.value.trim();
       if (!text) return;
-      input.value = "";
 
+      if (!currentUser) {
+        authModal.classList.add("open");
+        return;
+      }
+
+      input.value = "";
       try {
-        if (!convoId) {
-          const name = document.getElementById("chatName").value.trim() || "ভিজিটর";
-          const email = document.getElementById("chatEmail").value.trim();
-          localStorage.setItem("chat_name", name);
-          localStorage.setItem("chat_email", email);
-          const convoRef = await addDoc(collection(db, "conversations"), {
-            name, email, lastMessage: text, lastTs: serverTimestamp(), unread: 1,
-          });
-          convoId = convoRef.id;
-          localStorage.setItem("chat_convo_id", convoId);
-          await addDoc(collection(db, "conversations", convoId, "messages"), {
-            from: "user", text, ts: serverTimestamp(),
-          });
-          showChatUI();
-        } else {
-          await addDoc(collection(db, "conversations", convoId, "messages"), {
-            from: "user", text, ts: serverTimestamp(),
-          });
-          await updateDoc(doc(db, "conversations", convoId), {
-            lastMessage: text, lastTs: serverTimestamp(), unread: increment(1),
-          });
-        }
+        await addDoc(collection(db, "conversations", convoId, "messages"), {
+          from: "user", text, ts: serverTimestamp(),
+        });
+
+        await setDoc(doc(db, "conversations", convoId), {
+          name: currentUser.displayName || currentUser.email || "ভিজিটর",
+          email: currentUser.email || "",
+          lastMessage: text,
+          lastTs: serverTimestamp(),
+          unread: increment(1)
+        }, { merge: true });
+
       } catch (err) {
-        alert("মেসেজ পাঠানো যায়নি: " + err.message);
+        console.error("মেসেজ পাঠাতে সমস্যা:", err);
       }
     }
 
     document.getElementById("chatSendBtn").addEventListener("click", sendChat);
     document.getElementById("chatInput").addEventListener("keydown", (e) => e.key === "Enter" && sendChat());
 
-    /* ---- সার্চ — প্রজেক্ট পেজে রিডাইরেক্ট করে ---- */
-    document.getElementById("searchForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const q = document.getElementById("searchInput").value.trim();
-      if (q) window.location.href = "project_p.html?q=" + encodeURIComponent(q);
+    // Google Auth
+    document.getElementById("googleAuthBtn").addEventListener("click", async () => {
+      const provider = new GoogleAuthProvider();
+      try { await signInWithPopup(auth, provider); } catch(e) { alert(e.message); }
     });
 
+    // Apple Auth
+    document.getElementById("appleAuthBtn").addEventListener("click", async () => {
+      const provider = new OAuthProvider('apple.com');
+      try { await signInWithPopup(auth, provider); } catch(e) { alert(e.message); }
+    });
 
-    /* ---- এনালিটিক্স ট্র্যাকিং ---- */
-    function getVisitorId() {
-      let id = localStorage.getItem("visitor_id");
-      if (!id) {
-        id = "v_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
-        localStorage.setItem("visitor_id", id);
+    // Email Auth
+    document.getElementById("emailAuthBtn").addEventListener("click", async () => {
+      const email = document.getElementById("modalEmail").value.trim();
+      const password = document.getElementById("modalPassword").value.trim();
+      if (!email || !password) return alert("ইমেইল ও পাসওয়ার্ড লিখুন");
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        try {
+          await createUserWithEmailAndPassword(auth, email, password);
+        } catch (err2) { alert(err2.message); }
       }
-      return id;
-    }
-    try {
-      await addDoc(collection(db, "analytics_events"), {
-        page: window.location.pathname,
-        referrer: document.referrer || "",
-        visitorId: getVisitorId(),
-        ts: serverTimestamp(),
-      });
-    } catch (err) {
-      console.warn("ভিজিট ট্র্যাক করা যায়নি:", err.message);
+    });
+
+    function escapeHtml(s = "") {
+      return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     }
   </script>
 </body>
