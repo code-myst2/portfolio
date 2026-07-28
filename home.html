@@ -562,290 +562,289 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-    import {
-      getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs, addDoc, serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import {
+  getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs, addDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-    // ফায়ারবেস কনফিগারেশন
-    const firebaseConfig = {
-      apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
-      authDomain: "test-pro-portfolio.firebaseapp.com",
-      projectId: "test-pro-portfolio",
-      storageBucket: "test-pro-portfolio.firebasestorage.app",
-      messagingSenderId: "368597108521",
-      appId: "1:368597108521:web:ea84f26576e757ee3c5938",
-      measurementId: "G-70622PC5Q4",
-    };
+// ফায়ারবেস কনফিগারেশন
+const firebaseConfig = {
+  apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
+  authDomain: "test-pro-portfolio.firebaseapp.com",
+  projectId: "test-pro-portfolio",
+  storageBucket: "test-pro-portfolio.firebasestorage.app",
+  messagingSenderId: "368597108521",
+  appId: "1:368597108521:web:ea84f26576e757ee3c5938",
+  measurementId: "G-70622PC5Q4",
+};
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    // Lucide আইকন রিফ্রেশ
-    const refreshIcons = () => setTimeout(() => window.lucide?.createIcons(), 50);
+// Lucide আইকন রিফ্রেশ
+const refreshIcons = () => setTimeout(() => window.lucide?.createIcons(), 50);
 
-    // এলিমেন্ট ইউটিলিটি
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el && txt) el.textContent = txt; };
-    const escapeHtml = (s = "") => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+// এলিমেন্ট ইউটিলিটি
+const setTxt = (id, txt) => { const el = document.getElementById(id); if (el && txt) el.textContent = txt; };
+const escapeHtml = (s = "") => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-    // বছর সেট
-    setTxt('year', new Date().getFullYear());
+// বছর সেট
+setTxt('year', new Date().getFullYear());
 
-    /* --- Read More / Read Less --- */
-    let fullAboutText = "";
-    const TEXT_LIMIT = 120;
+/* --- Read More / Read Less --- */
+let fullAboutText = "";
+const TEXT_LIMIT = 120;
 
-    function setupAboutText(text) {
-      fullAboutText = text || "";
-      const p = document.getElementById("aboutText");
-      const btn = document.getElementById("readMoreBtn");
-      if (!p || !btn) return;
+function setupAboutText(text) {
+  fullAboutText = text || "";
+  const p = document.getElementById("aboutText");
+  const btn = document.getElementById("readMoreBtn");
+  if (!p || !btn) return;
 
-      if (fullAboutText.length > TEXT_LIMIT) {
-        p.textContent = fullAboutText.slice(0, TEXT_LIMIT) + "...";
-        btn.style.display = "inline-flex";
-        btn.dataset.expanded = "false";
-        btn.querySelector("span").textContent = "Read More";
-      } else {
-        p.textContent = fullAboutText;
-        btn.style.display = "none";
-      }
-      refreshIcons();
+  if (fullAboutText.length > TEXT_LIMIT) {
+    p.textContent = fullAboutText.slice(0, TEXT_LIMIT) + "...";
+    btn.style.display = "inline-flex";
+    btn.dataset.expanded = "false";
+    btn.querySelector("span").textContent = "Read More";
+  } else {
+    p.textContent = fullAboutText;
+    btn.style.display = "none";
+  }
+  refreshIcons();
+}
+
+document.getElementById("readMoreBtn")?.addEventListener("click", function () {
+  const p = document.getElementById("aboutText");
+  const isExp = this.dataset.expanded === "true";
+  p.textContent = isExp ? fullAboutText.slice(0, TEXT_LIMIT) + "..." : fullAboutText;
+  this.dataset.expanded = isExp ? "false" : "true";
+  this.querySelector("span").textContent = isExp ? "Read More" : "Read Less";
+  this.querySelector("i")?.setAttribute("data-lucide", isExp ? "chevron-down" : "chevron-up");
+  refreshIcons();
+});
+
+/* --- সাইট সেটিংস লোড --- */
+async function loadSiteSettings() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "site"));
+    if (!snap.exists()) return setupAboutText("Welcome to my portfolio!");
+
+    const s = snap.data();
+    const title = s.siteTitle || "Portfolio";
+
+    ['brandName', 'heroName', 'footerBrand', 'footerCopy'].forEach(id => setTxt(id, title));
+    setTxt("heroTagline", s.tagline);
+    setTxt("coreFoundationName", s.coreFoundation);
+    setupAboutText(s.aboutText || "Welcome to my personal portfolio!");
+
+    if (s.profileImg && document.getElementById("profileImg")) {
+      document.getElementById("profileImg").src = s.profileImg;
     }
 
-    document.getElementById("readMoreBtn")?.addEventListener("click", function () {
-      const p = document.getElementById("aboutText");
-      const isExp = this.dataset.expanded === "true";
-      p.textContent = isExp ? fullAboutText.slice(0, TEXT_LIMIT) + "..." : fullAboutText;
-      this.dataset.expanded = isExp ? "false" : "true";
-      this.querySelector("span").textContent = isExp ? "Read More" : "Read Less";
-      this.querySelector("i")?.setAttribute("data-lucide", isExp ? "chevron-down" : "chevron-up");
-      refreshIcons();
-    });
-
-    /* --- সাইট সেটিংস লোড --- */
-    async function loadSiteSettings() {
-      try {
-        const snap = await getDoc(doc(db, "settings", "site"));
-        if (!snap.exists()) return setupAboutText("Welcome to my portfolio!");
-
-        const s = snap.data();
-        const title = s.siteTitle || "Portfolio";
-
-        ['brandName', 'heroName', 'footerBrand', 'footerCopy'].forEach(id => setTxt(id, title));
-        setTxt("heroTagline", s.tagline);
-        setTxt("coreFoundationName", s.coreFoundation);
-        setupAboutText(s.aboutText || "Welcome to my personal portfolio!");
-
-        if (s.profileImg && document.getElementById("profileImg")) {
-          document.getElementById("profileImg").src = s.profileImg;
-        }
-
-        // সোশ্যাল আইকন (ফুটার)
-        const footerSocial = document.getElementById("footerSocial");
-        if (footerSocial) {
-          footerSocial.innerHTML = "";
-          [["mail", s.email ? "mailto:" + s.email : null], ["facebook", s.facebook], ["linkedin", s.linkedin], ["github", s.github]]
-            .filter(([_, url]) => !!url)
-            .forEach(([icon, url]) => {
-              footerSocial.innerHTML += `<a href="${url}" target="_blank" rel="noopener" class="social-icon"><i data-lucide="${icon}"></i></a>`;
-            });
-        }
-
-        // স্কিল ও ল্যাঙ্গুয়েজ (ফায়ারবেস থেকে)
-        if (s.skillsBranches?.length) renderSkills(s.skillsBranches);
-        else document.getElementById("desktopBranches").innerHTML = `<p style="color:var(--text-dim);font-size:13px;text-align:center;grid-column:1/-1;">এখনো কোনো স্কিল যুক্ত করা হয়নি।</p>`;
-
-        if (s.languagesList?.length) renderLanguages(s.languagesList);
-        else document.getElementById("languageContainer").innerHTML = `<p style="color:var(--text-dim);font-size:13px;text-align:center;grid-column:1/-1;">এখনো কোনো ভাষা যুক্ত করা হয়নি।</p>`;
-
-        refreshIcons();
-      } catch (err) {
-        console.warn("সেটিংস ভুল:", err.message);
-        setupAboutText("Welcome to my portfolio!");
-      }
-    }
-
-    /* --- স্কিল রেন্ডার --- */
-    function renderSkills(branches) {
-      const desktop = document.getElementById("desktopBranches");
-      const track = document.getElementById("track");
-      const dots = document.getElementById("dots");
-      if (!desktop || !track || !dots) return;
-
-      desktop.innerHTML = ""; track.innerHTML = ""; dots.innerHTML = "";
-
-      branches.forEach((b, idx) => {
-        const col = b.accent || '#7dd3b0';
-
-        desktop.innerHTML += `
-          <div class="branch">
-            <div class="branch-card" style="--accent-color:${col}">
-              <div class="name">${escapeHtml(b.name || '')}</div>
-              <div class="desc">${escapeHtml(b.desc || '')}</div>
-            </div>
-            <div class="stem" style="background:${col}"></div>
-            <div class="leaves">
-              ${(b.working || []).map(w => `<span class="leaf" style="--accent-color:${col}">${escapeHtml(w)}</span>`).join("")}
-              ${(b.learning || []).map(l => `<span class="leaf learning" style="--accent-color:${col};color:${col}">${escapeHtml(l)}</span>`).join("")}
-            </div>
-          </div>`;
-
-        track.innerHTML += `
-          <div class="skill-card-m" style="--accent-color:${col}">
-            <div class="name">${escapeHtml(b.name || '')}</div>
-            <div class="desc">${escapeHtml(b.desc || '')}</div>
-            <div class="list-label">Working with</div>
-            <div class="chips">${(b.working || []).map(w => `<span class="chip" style="--accent-color:${col}">${escapeHtml(w)}</span>`).join("")}</div>
-            <div class="list-label">Currently learning</div>
-            <div class="chips">${(b.learning || []).map(l => `<span class="chip learning" style="--accent-color:${col};color:${col}">${escapeHtml(l)}</span>`).join("")}</div>
-          </div>`;
-
-        dots.innerHTML += `<button class="dot ${idx === 0 ? 'active' : ''}" data-index="${idx}" style="--accent-active:${col}"></button>`;
-      });
-
-      initCarousel();
-      refreshIcons();
-    }
-
-    /* --- ল্যাঙ্গুয়েজ রেন্ডার --- */
-    function renderLanguages(langList) {
-      const container = document.getElementById("languageContainer");
-      if (!container) return;
-      container.innerHTML = langList.map(l => `
-        <div class="lang-item">
-          <span class="lang-name">${escapeHtml(l.name || '')}</span>
-          <div class="lang-bar"><div class="lang-fill" style="width:${l.fill || '50%'}"></div></div>
-          <span class="lang-level">${escapeHtml(l.level || '')}</span>
-        </div>`).join("");
-    }
-
-    /* --- মোবাইল স্কিল ক্যারোজেল --- */
-    function initCarousel() {
-      const track = document.getElementById('track');
-      const dots = document.querySelectorAll('.dot');
-      if (!track || !track.children.length) return;
-
-      const cards = Array.from(track.children);
-      const getStep = () => cards[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 0);
-
-      const setActive = idx => {
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-        cards.forEach((c, i) => c.classList.toggle('in-view', i === idx));
-      };
-
-      dots.forEach(dot => dot.addEventListener('click', () => {
-        track.scrollTo({ left: parseInt(dot.dataset.index) * getStep(), behavior: 'smooth' });
-      }));
-
-      track.addEventListener('scroll', () => {
-        const idx = Math.round(track.scrollLeft / getStep());
-        setActive(Math.max(0, Math.min(cards.length - 1, idx)));
-      });
-
-      setActive(0);
-    }
-
-    /* --- প্রজেক্ট, ব্লগ ও রিভিউ লোড --- */
-    async function loadData() {
-      try {
-        // ১. গড় রেটিং ব্যাজ
-        const rSnap = await getDocs(collection(db, "ratings"));
-        const revEl = document.getElementById("reviewsPreview");
-
-        if (!rSnap.empty) {
-          let total = 0;
-          let revHtml = "";
-
-          rSnap.forEach(d => {
-            const r = d.data();
-            const stars = r.stars || 5;
-            total += stars;
-            const name = r.name || "Client";
-            const comment = r.comment || "Great service and dynamic work!";
-
-            revHtml += `
-              <div class="review-card">
-                <div>
-                  <div class="review-user">
-                    <div class="review-avatar">${name.charAt(0).toUpperCase()}</div>
-                    <div>
-                      <div class="review-name">${escapeHtml(name)}</div>
-                      <div class="review-stars">${"★".repeat(stars)}${"☆".repeat(5 - stars)}</div>
-                    </div>
-                  </div>
-                  <div class="review-comment">${escapeHtml(comment)}</div>
-                </div>
-              </div>`;
-          });
-
-          const avg = (total / rSnap.size).toFixed(1);
-          const badge = document.getElementById("ratingBadge");
-          if (badge) {
-            badge.textContent = `⭐ ${avg} (${rSnap.size} Reviews)`;
-            badge.style.display = "inline-block";
-          }
-
-          // ফুটারের উপরে সোয়াইপেবল রিভিউ রেন্ডার
-          if (revEl) revEl.innerHTML = revHtml;
-        } else {
-          if (revEl) revEl.innerHTML = `<p style="color:var(--text-dim);font-size:13px;">এখনো কোনো রিভিউ নেই।</p>`;
-        }
-
-        // ২. প্রজেক্টস
-        const pSnap = await getDocs(query(collection(db, "projects"), orderBy("createdAt", "desc"), limit(6)));
-        const pEl = document.getElementById("projectsPreview");
-        if (pEl) {
-          pEl.innerHTML = pSnap.empty ? `<p style="color:var(--text-dim);font-size:13px;">No projects available.</p>` :
-            pSnap.docs.map(d => {
-              const p = d.data();
-              return `<a href="project_p.html" class="glass swipe-card">
-                <div>
-                  ${p.coverUrl ? `<img src="${p.coverUrl}" class="cover" />` : ""}
-                  <h4>${escapeHtml(p.title || "")}</h4>
-                  <p>${escapeHtml((p.description || "").slice(0, 80))}...</p>
-                </div>
-              </a>`;
-            }).join("");
-        }
-
-        // ৩. ব্লগস
-        const bSnap = await getDocs(query(collection(db, "blogs"), orderBy("createdAt", "desc"), limit(6)));
-        const bEl = document.getElementById("blogPreview");
-        if (bEl) {
-          const posts = bSnap.docs.map(d => d.data()).filter(b => b.status === "প্রকাশিত" || b.status === "Published");
-          bEl.innerHTML = posts.length === 0 ? `<p style="color:var(--text-dim);font-size:13px;">No blogs available.</p>` :
-            posts.map(b => `<a href="blog_p.html" class="glass swipe-card">
-              <div>
-                <h4>${escapeHtml(b.title || "")}</h4>
-                <p>${escapeHtml((b.excerpt || b.content || "").slice(0, 80))}...</p>
-              </div>
-            </a>`).join("");
-        }
-
-        refreshIcons();
-      } catch (err) {
-        console.warn("ডাটা লোড ত্রুটি:", err.message);
-      }
-    }
-
-    /* --- অ্যানালিটিক্স ট্র্যাকিং --- */
-    async function trackVisitor() {
-      let id = localStorage.getItem("visitor_id") || ("v_" + Math.random().toString(36).slice(2) + Date.now().toString(36));
-      localStorage.setItem("visitor_id", id);
-      try {
-        await addDoc(collection(db, "analytics_events"), {
-          page: window.location.pathname,
-          referrer: document.referrer || "",
-          visitorId: id,
-          ts: serverTimestamp(),
+    // সোশ্যাল আইকন (ফুটার)
+    const footerSocial = document.getElementById("footerSocial");
+    if (footerSocial) {
+      footerSocial.innerHTML = "";
+      [["mail", s.email ? "mailto:" + s.email : null], ["facebook", s.facebook], ["linkedin", s.linkedin], ["github", s.github]]
+        .filter(([_, url]) => !!url)
+        .forEach(([icon, url]) => {
+          footerSocial.innerHTML += `<a href="${url}" target="_blank" rel="noopener" class="social-icon"><i data-lucide="${icon}"></i></a>`;
         });
-      } catch (e) {}
     }
 
-    // রান ইনিশিয়ালাইজেশন
-    loadSiteSettings();
-    loadData();
-    trackVisitor();
+    // স্কিল ও ল্যাঙ্গুয়েজ
+    if (s.skillsBranches?.length) renderSkills(s.skillsBranches);
+    else document.getElementById("desktopBranches").innerHTML = `<p style="color:var(--text-dim);font-size:13px;text-align:center;grid-column:1/-1;">এখনো কোনো স্কিল যুক্ত করা হয়নি।</p>`;
+
+    if (s.languagesList?.length) renderLanguages(s.languagesList);
+    else document.getElementById("languageContainer").innerHTML = `<p style="color:var(--text-dim);font-size:13px;text-align:center;grid-column:1/-1;">এখনো কোনো ভাষা যুক্ত করা হয়নি।</p>`;
+
+    refreshIcons();
+  } catch (err) {
+    console.warn("সেটিংস ভুল:", err.message);
+    setupAboutText("Welcome to my portfolio!");
+  }
+}
+
+/* --- স্কিল রেন্ডার --- */
+function renderSkills(branches) {
+  const desktop = document.getElementById("desktopBranches");
+  const track = document.getElementById("track");
+  const dots = document.getElementById("dots");
+  if (!desktop || !track || !dots) return;
+
+  desktop.innerHTML = ""; track.innerHTML = ""; dots.innerHTML = "";
+
+  branches.forEach((b, idx) => {
+    const col = b.accent || '#7dd3b0';
+
+    desktop.innerHTML += `
+      <div class="branch">
+        <div class="branch-card" style="--accent-color:${col}">
+          <div class="name">${escapeHtml(b.name || '')}</div>
+          <div class="desc">${escapeHtml(b.desc || '')}</div>
+        </div>
+        <div class="stem" style="background:${col}"></div>
+        <div class="leaves">
+          ${(b.working || []).map(w => `<span class="leaf" style="--accent-color:${col}">${escapeHtml(w)}</span>`).join("")}
+          ${(b.learning || []).map(l => `<span class="leaf learning" style="--accent-color:${col};color:${col}">${escapeHtml(l)}</span>`).join("")}
+        </div>
+      </div>`;
+
+    track.innerHTML += `
+      <div class="skill-card-m" style="--accent-color:${col}">
+        <div class="name">${escapeHtml(b.name || '')}</div>
+        <div class="desc">${escapeHtml(b.desc || '')}</div>
+        <div class="list-label">Working with</div>
+        <div class="chips">${(b.working || []).map(w => `<span class="chip" style="--accent-color:${col}">${escapeHtml(w)}</span>`).join("")}</div>
+        <div class="list-label">Currently learning</div>
+        <div class="chips">${(b.learning || []).map(l => `<span class="chip learning" style="--accent-color:${col};color:${col}">${escapeHtml(l)}</span>`).join("")}</div>
+      </div>`;
+
+    dots.innerHTML += `<button class="dot ${idx === 0 ? 'active' : ''}" data-index="${idx}" style="--accent-active:${col}"></button>`;
+  });
+
+  initCarousel();
+  refreshIcons();
+}
+
+/* --- ল্যাঙ্গুয়েজ রেন্ডার --- */
+function renderLanguages(langList) {
+  const container = document.getElementById("languageContainer");
+  if (!container) return;
+  container.innerHTML = langList.map(l => `
+    <div class="lang-item">
+      <span class="lang-name">${escapeHtml(l.name || '')}</span>
+      <div class="lang-bar"><div class="lang-fill" style="width:${l.fill || '50%'}"></div></div>
+      <span class="lang-level">${escapeHtml(l.level || '')}</span>
+    </div>`).join("");
+}
+
+/* --- মোবাইল ক্যারোজেল লজিক --- */
+function initCarousel() {
+  const track = document.getElementById('track');
+  const dots = document.querySelectorAll('.dot');
+  if (!track || !track.children.length) return;
+
+  const cards = Array.from(track.children);
+  const getStep = () => cards[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 0);
+
+  const setActive = idx => {
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    cards.forEach((c, i) => c.classList.toggle('in-view', i === idx));
+  };
+
+  dots.forEach(dot => dot.addEventListener('click', () => {
+    track.scrollTo({ left: parseInt(dot.dataset.index) * getStep(), behavior: 'smooth' });
+  }));
+
+  track.addEventListener('scroll', () => {
+    const idx = Math.round(track.scrollLeft / getStep());
+    setActive(Math.max(0, Math.min(cards.length - 1, idx)));
+  });
+
+  setActive(0);
+}
+
+/* --- প্রজেক্ট, ব্লগ ও রিভিউ লোড --- */
+async function loadData() {
+  try {
+    // ১. রেটিং ও রিভিউ ফেচ করা
+    const rSnap = await getDocs(collection(db, "ratings"));
+    const revEl = document.getElementById("reviewsPreview");
+
+    if (!rSnap.empty) {
+      let totalStars = 0;
+      let revHtml = "";
+
+      rSnap.forEach(d => {
+        const r = d.data();
+        const stars = Number(r.stars) || 5;
+        totalStars += stars;
+        const name = r.name || r.userName || "ভিজিটর";
+        const comment = r.comment || r.message || "খুব সুন্দর পোর্টফোলিও!";
+        
+        revHtml += `
+          <div class="review-card">
+            <div>
+              <div class="review-user">
+                <div class="review-avatar">${name.charAt(0).toUpperCase()}</div>
+                <div>
+                  <div class="review-name">${escapeHtml(name)}</div>
+                  <div class="review-stars">${"★".repeat(Math.min(5, stars))}${"☆".repeat(Math.max(0, 5 - stars))}</div>
+                </div>
+              </div>
+              <div class="review-comment">${escapeHtml(comment)}</div>
+            </div>
+          </div>`;
+      });
+
+      const avg = (totalStars / rSnap.size).toFixed(1);
+      const badge = document.getElementById("ratingBadge");
+      if (badge) {
+        badge.textContent = `⭐ ${avg} (${rSnap.size} Reviews)`;
+        badge.style.display = "inline-block";
+      }
+
+      if (revEl) revEl.innerHTML = revHtml;
+    } else {
+      if (revEl) revEl.innerHTML = `<p style="color:var(--text-dim);font-size:13px;">এখনো কোনো রিভিউ নেই।</p>`;
+    }
+
+    // ২. প্রজেক্টস
+    const pSnap = await getDocs(query(collection(db, "projects"), orderBy("createdAt", "desc"), limit(6)));
+    const pEl = document.getElementById("projectsPreview");
+    if (pEl) {
+      pEl.innerHTML = pSnap.empty ? `<p style="color:var(--text-dim);font-size:13px;">No projects available.</p>` :
+        pSnap.docs.map(d => {
+          const p = d.data();
+          return `<a href="project_p.html" class="glass swipe-card">
+            <div>
+              ${p.coverUrl ? `<img src="${p.coverUrl}" class="cover" />` : ""}
+              <h4>${escapeHtml(p.title || "")}</h4>
+              <p>${escapeHtml((p.description || "").slice(0, 80))}...</p>
+            </div>
+          </a>`;
+        }).join("");
+    }
+
+    // ৩. ব্লগস
+    const bSnap = await getDocs(query(collection(db, "blogs"), orderBy("createdAt", "desc"), limit(6)));
+    const bEl = document.getElementById("blogPreview");
+    if (bEl) {
+      const posts = bSnap.docs.map(d => d.data()).filter(b => b.status === "প্রকাশিত" || b.status === "Published");
+      bEl.innerHTML = posts.length === 0 ? `<p style="color:var(--text-dim);font-size:13px;">No blogs available.</p>` :
+        posts.map(b => `<a href="blog_p.html" class="glass swipe-card">
+          <div>
+            <h4>${escapeHtml(b.title || "")}</h4>
+            <p>${escapeHtml((b.excerpt || b.content || "").slice(0, 80))}...</p>
+          </div>
+        </a>`).join("");
+    }
+
+    refreshIcons();
+  } catch (err) {
+    console.warn("ডাটা লোড ত্রুটি:", err.message);
+  }
+}
+
+/* --- অ্যানালিটিক্স ট্র্যাকিং --- */
+async function trackVisitor() {
+  let id = localStorage.getItem("visitor_id") || ("v_" + Math.random().toString(36).slice(2) + Date.now().toString(36));
+  localStorage.setItem("visitor_id", id);
+  try {
+    await addDoc(collection(db, "analytics_events"), {
+      page: window.location.pathname,
+      referrer: document.referrer || "",
+      visitorId: id,
+      ts: serverTimestamp(),
+    });
+  } catch (e) {}
+}
+
+// রান ইনিশিয়ালাইজেশন
+loadSiteSettings();
+loadData();
+trackVisitor();  
   </script>
 
 </body>
