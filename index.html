@@ -153,7 +153,7 @@
     }
     .about-card h3 { font-size: 18px; margin-bottom: 10px; font-family: 'Space Grotesk', sans-serif; }
     .about-card p { color: var(--text-dim); font-size: 14px; line-height: 1.6; }
-    
+
     .read-more-btn {
       color: var(--accent);
       background: none;
@@ -409,6 +409,8 @@
     .footer-col h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .footer-col ul li a { font-size: 12.5px; color: var(--text-dim); }
+    .footer-social { display: flex; gap: 12px; justify-content: center; margin: 24px 0 16px; }
+    .social-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--glass-strong); display: flex; align-items: center; justify-content: center; color: var(--text); }
     .footer-bottom { border-top: 1px solid var(--line); padding-top: 14px; text-align: center; font-size: 11px; color: var(--text-dim); }
 
     @media (min-width: 600px) { .footer-top { grid-template-columns: 1.2fr 1fr 1fr; } }
@@ -441,13 +443,13 @@
   </div>
 
   <div class="container">
-    
+
     <!-- HERO SECTION -->
     <section class="hero-section">
       <img src="profile.jpg" alt="Profile" class="avatar" id="profileImg" onerror="this.src='https://via.placeholder.com/105'" />
       <h1 class="hero-title" id="heroName">Loading...</h1>
       <p class="hero-tagline" id="heroTagline"></p>
-      
+
       <!-- HERO BUTTONS -->
       <div class="btn-row">
         <a href="contract.html" class="btn btn-accent"><i data-lucide="message-square"></i> Let's Chat</a>
@@ -465,7 +467,7 @@
       <button id="readMoreBtn" class="read-more-btn" style="display:none;">
         <span>Read More</span> <i data-lucide="chevron-down"></i>
       </button>
-      
+
       <!-- RECOMMENDED BUTTONS -->
       <div class="rec-btns">
         <a href="#skillsSection" class="rec-btn"><i data-lucide="code"></i> My Skill</a>
@@ -530,7 +532,7 @@
         <div class="footer-col">
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="home.html">Home</a></li>
             <li><a href="project_p.html">Projects</a></li>
             <li><a href="contract.html">Chat</a></li>
             <li><a href="blog_p.html">Blogs</a></li>
@@ -544,7 +546,10 @@
           </ul>
         </div>
       </div>
-      
+
+      <!-- SOCIAL ICONS IN FOOTER -->
+      <div class="footer-social" id="footerSocial"></div>
+
       <div class="footer-bottom">
         <p>&copy; <span id="year"></span> <span id="footerCopy">Portfolio</span>. All rights reserved.</p>
       </div>
@@ -554,7 +559,7 @@
 
   <!-- ENGLISH BOTTOM NAVIGATION -->
   <nav class="bottom-nav glass">
-    <a href="index.html" class="active"><i data-lucide="home"></i><span>Home</span></a>
+    <a href="home.html" class="active"><i data-lucide="home"></i><span>Home</span></a>
     <a href="project_p.html"><i data-lucide="folder-kanban"></i><span>Project</span></a>
     <a href="contract.html"><i data-lucide="message-circle"></i><span>Chat</span></a>
     <a href="blog_p.html"><i data-lucide="file-text"></i><span>Blog</span></a>
@@ -568,6 +573,7 @@
       getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs, addDoc, serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
+    // ফায়ারবেস কনফিগারেশন
     const firebaseConfig = {
       apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
       authDomain: "test-pro-portfolio.firebaseapp.com",
@@ -577,21 +583,21 @@
       appId: "1:368597108521:web:ea84f26576e757ee3c5938",
       measurementId: "G-70622PC5Q4",
     };
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    function refreshIcons() {
-      setTimeout(() => {
-        if (window.lucide) {
-          window.lucide.createIcons();
-        }
-      }, 50);
-    }
+    // Lucide আইকন রিফ্রেশ
+    const refreshIcons = () => setTimeout(() => window.lucide?.createIcons(), 50);
 
-    document.getElementById('year').textContent = new Date().getFullYear();
-    refreshIcons();
+    // এলিমেন্ট ইউটিলিটি
+    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el && txt) el.textContent = txt; };
+    const escapeHtml = (s = "") => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-    /* --- Read More / Read Less Text Manager --- */
+    // বছর সেট
+    setTxt('year', new Date().getFullYear());
+
+    /* --- Read More / Read Less --- */
     let fullAboutText = "";
     const TEXT_LIMIT = 120;
 
@@ -599,6 +605,7 @@
       fullAboutText = text || "";
       const p = document.getElementById("aboutText");
       const btn = document.getElementById("readMoreBtn");
+      if (!p || !btn) return;
 
       if (fullAboutText.length > TEXT_LIMIT) {
         p.textContent = fullAboutText.slice(0, TEXT_LIMIT) + "...";
@@ -609,243 +616,212 @@
         p.textContent = fullAboutText;
         btn.style.display = "none";
       }
+      refreshIcons();
     }
 
-    document.getElementById("readMoreBtn").addEventListener("click", () => {
+    document.getElementById("readMoreBtn")?.addEventListener("click", function () {
       const p = document.getElementById("aboutText");
-      const btn = document.getElementById("readMoreBtn");
-      const expanded = btn.dataset.expanded === "true";
-
-      if (expanded) {
-        p.textContent = fullAboutText.slice(0, TEXT_LIMIT) + "...";
-        btn.querySelector("span").textContent = "Read More";
-        btn.dataset.expanded = "false";
-      } else {
-        p.textContent = fullAboutText;
-        btn.querySelector("span").textContent = "Read Less";
-        btn.dataset.expanded = "true";
-      }
+      const isExp = this.dataset.expanded === "true";
+      p.textContent = isExp ? fullAboutText.slice(0, TEXT_LIMIT) + "..." : fullAboutText;
+      this.dataset.expanded = isExp ? "false" : "true";
+      this.querySelector("span").textContent = isExp ? "Read More" : "Read Less";
+      this.querySelector("i")?.setAttribute("data-lucide", isExp ? "chevron-down" : "chevron-up");
       refreshIcons();
     });
 
-    /* --- Load Profile / Hero / About --- */
-    async function loadProfile() {
+    /* --- সাইট সেটিংস লোড --- */
+    async function loadSiteSettings() {
       try {
-        const snap = await getDoc(doc(db, "settings", "profile"));
-        if (!snap.exists()) return;
-        const data = snap.data();
+        const snap = await getDoc(doc(db, "settings", "site"));
+        if (!snap.exists()) return setupAboutText("Welcome to my portfolio!");
 
-        document.getElementById("brandName").textContent = data.brandName || "Portfolio";
-        document.getElementById("footerBrand").textContent = data.brandName || "Portfolio";
-        document.getElementById("footerCopy").textContent = data.brandName || "Portfolio";
-        document.getElementById("heroName").textContent = data.name || "";
-        document.getElementById("heroTagline").textContent = data.tagline || "";
-        document.getElementById("coreFoundationName").textContent = data.coreSkill || "Web Development";
+        const s = snap.data();
+        const title = s.siteTitle || "Portfolio";
 
-        if (data.avatar) {
-          document.getElementById("profileImg").src = data.avatar;
+        ['brandName', 'heroName', 'footerBrand', 'footerCopy'].forEach(id => setTxt(id, title));
+        setTxt("heroTagline", s.tagline);
+        setTxt("coreFoundationName", s.coreFoundation);
+        setupAboutText(s.aboutText || "Welcome to my personal portfolio!");
+
+        if (s.profileImg && document.getElementById("profileImg")) {
+          document.getElementById("profileImg").src = s.profileImg;
         }
 
-        if (data.rating) {
-          const badge = document.getElementById("ratingBadge");
-          badge.textContent = "★ " + data.rating + " Rating";
-          badge.style.display = "inline-block";
+        // সোশ্যাল আইকন (ফুটার)
+        const footerSocial = document.getElementById("footerSocial");
+        if (footerSocial) {
+          footerSocial.innerHTML = "";
+          [["mail", s.email ? "mailto:" + s.email : null], ["facebook", s.facebook], ["linkedin", s.linkedin], ["github", s.github]]
+            .filter(([_, url]) => !!url)
+            .forEach(([icon, url]) => {
+              footerSocial.innerHTML += `<a href="${url}" target="_blank" rel="noopener" class="social-icon"><i data-lucide="${icon}"></i></a>`;
+            });
         }
 
-        setupAboutText(data.about);
+        // স্কিল ও ল্যাঙ্গুয়েজ (শুধু ফায়ারবেস থেকে)
+        if (s.skillsBranches?.length) renderSkills(s.skillsBranches);
+        else document.getElementById("desktopBranches").innerHTML = `<p style="color:var(--text-dim);font-size:13px;text-align:center;grid-column:1/-1;">এখনো কোনো স্কিল যুক্ত করা হয়নি।</p>`;
+
+        if (s.languagesList?.length) renderLanguages(s.languagesList);
+        else document.getElementById("languageContainer").innerHTML = `<p style="color:var(--text-dim);font-size:13px;text-align:center;grid-column:1/-1;">এখনো কোনো ভাষা যুক্ত করা হয়নি।</p>`;
+
+        refreshIcons();
       } catch (err) {
-        console.error("Profile load failed:", err);
+        console.warn("সেটিংস ভুল:", err.message);
+        setupAboutText("Welcome to my portfolio!");
       }
     }
 
-    /* --- Load Skills (Desktop grid + Mobile carousel) --- */
-    async function loadSkills() {
-      try {
-        const q = query(collection(db, "skills"), orderBy("order", "asc"));
-        const snaps = await getDocs(q);
-        if (snaps.empty) return;
+    /* --- স্কিল রেন্ডার --- */
+    function renderSkills(branches) {
+      const desktop = document.getElementById("desktopBranches");
+      const track = document.getElementById("track");
+      const dots = document.getElementById("dots");
+      if (!desktop || !track || !dots) return;
 
-        const desktopWrap = document.getElementById("desktopBranches");
-        const track = document.getElementById("track");
-        const dotsWrap = document.getElementById("dots");
-        desktopWrap.innerHTML = "";
-        track.innerHTML = "";
-        dotsWrap.innerHTML = "";
+      desktop.innerHTML = ""; track.innerHTML = ""; dots.innerHTML = "";
 
-        let index = 0;
-        snaps.forEach((docSnap) => {
-          const s = docSnap.data();
-          const color = s.color || "#7dd3b0";
-          const chips = Array.isArray(s.chips) ? s.chips : [];
+      branches.forEach((b, idx) => {
+        const col = b.accent || '#7dd3b0';
 
-          /* Desktop branch card */
-          const branch = document.createElement("div");
-          branch.className = "branch";
-          branch.innerHTML = `
-            <div class="branch-card" style="--accent-color:${color}">
-              <div class="name">${s.name || ""}</div>
-              <div class="desc">${s.desc || ""}</div>
+        desktop.innerHTML += `
+          <div class="branch">
+            <div class="branch-card" style="--accent-color:${col}">
+              <div class="name">${escapeHtml(b.name || '')}</div>
+              <div class="desc">${escapeHtml(b.desc || '')}</div>
             </div>
-            <div class="stem" style="background:${color}"></div>
+            <div class="stem" style="background:${col}"></div>
             <div class="leaves">
-              ${chips.map(c => `<span class="leaf ${c.learning ? 'learning' : ''}" style="--accent-color:${color}">${c.label}</span>`).join("")}
+              ${(b.working || []).map(w => `<span class="leaf" style="--accent-color:${col}">${escapeHtml(w)}</span>`).join("")}
+              ${(b.learning || []).map(l => `<span class="leaf learning" style="--accent-color:${col};color:${col}">${escapeHtml(l)}</span>`).join("")}
             </div>
-          `;
-          desktopWrap.appendChild(branch);
+          </div>`;
 
-          /* Mobile carousel card */
-          const card = document.createElement("div");
-          card.className = "skill-card-m" + (index === 0 ? " in-view" : "");
-          card.style.setProperty("--accent-color", color);
-          card.innerHTML = `
-            <div class="name">${s.name || ""}</div>
-            <div class="desc">${s.desc || ""}</div>
-            <div class="list-label">Includes</div>
-            <div class="chips">
-              ${chips.map(c => `<span class="chip ${c.learning ? 'learning' : ''}">${c.label}</span>`).join("")}
-            </div>
-          `;
-          track.appendChild(card);
+        track.innerHTML += `
+          <div class="skill-card-m" style="--accent-color:${col}">
+            <div class="name">${escapeHtml(b.name || '')}</div>
+            <div class="desc">${escapeHtml(b.desc || '')}</div>
+            <div class="list-label">Working with</div>
+            <div class="chips">${(b.working || []).map(w => `<span class="chip" style="--accent-color:${col}">${escapeHtml(w)}</span>`).join("")}</div>
+            <div class="list-label">Currently learning</div>
+            <div class="chips">${(b.learning || []).map(l => `<span class="chip learning" style="--accent-color:${col};color:${col}">${escapeHtml(l)}</span>`).join("")}</div>
+          </div>`;
 
-          /* Dot for this card */
-          const dot = document.createElement("button");
-          dot.className = "dot" + (index === 0 ? " active" : "");
-          dot.addEventListener("click", () => {
-            card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-          });
-          dotsWrap.appendChild(dot);
+        dots.innerHTML += `<button class="dot ${idx === 0 ? 'active' : ''}" data-index="${idx}" style="--accent-active:${col}"></button>`;
+      });
 
-          index++;
-        });
-
-        setupCarouselObserver(track, dotsWrap);
-      } catch (err) {
-        console.error("Skills load failed:", err);
-      }
-    }
-
-    function setupCarouselObserver(track, dotsWrap) {
-      const cards = Array.from(track.children);
-      const dots = Array.from(dotsWrap.children);
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const i = cards.indexOf(entry.target);
-          if (i === -1) return;
-          if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-            cards.forEach(c => c.classList.remove("in-view"));
-            dots.forEach(d => d.classList.remove("active"));
-            entry.target.classList.add("in-view");
-            if (dots[i]) dots[i].classList.add("active");
-          }
-        });
-      }, { root: track, threshold: [0.6] });
-
-      cards.forEach(c => observer.observe(c));
-    }
-
-    /* --- Load Languages --- */
-    async function loadLanguages() {
-      try {
-        const q = query(collection(db, "languages"), orderBy("order", "asc"));
-        const snaps = await getDocs(q);
-        if (snaps.empty) return;
-
-        const wrap = document.getElementById("languageContainer");
-        wrap.innerHTML = "";
-
-        snaps.forEach((docSnap) => {
-          const l = docSnap.data();
-          const level = Math.min(100, Math.max(0, l.level || 0));
-          const item = document.createElement("div");
-          item.className = "lang-item";
-          item.innerHTML = `
-            <div class="lang-name">${l.name || ""}</div>
-            <div class="lang-bar"><div class="lang-fill" style="width:${level}%"></div></div>
-            <div class="lang-level">${l.label || level + "%"}</div>
-          `;
-          wrap.appendChild(item);
-        });
-      } catch (err) {
-        console.error("Languages load failed:", err);
-      }
-    }
-
-    /* --- Load Projects (preview) --- */
-    async function loadProjects() {
-      try {
-        const q = query(collection(db, "projects"), orderBy("order", "asc"), limit(6));
-        const snaps = await getDocs(q);
-        const wrap = document.getElementById("projectsPreview");
-        wrap.innerHTML = "";
-
-        if (snaps.empty) {
-          wrap.innerHTML = '<p style="color:var(--text-dim); font-size:13px;">এখনো কোনো প্রজেক্ট যুক্ত করা হয়নি।</p>';
-          return;
-        }
-
-        snaps.forEach((docSnap) => {
-          const p = docSnap.data();
-          const card = document.createElement(p.link ? "a" : "div");
-          if (p.link) card.href = p.link;
-          card.className = "glass swipe-card";
-          card.innerHTML = `
-            ${p.image ? `<img src="${p.image}" class="cover" alt="${p.title || ''}" />` : ""}
-            <div>
-              <h4>${p.title || ""}</h4>
-              <p>${p.desc || ""}</p>
-            </div>
-          `;
-          wrap.appendChild(card);
-        });
-      } catch (err) {
-        console.error("Projects load failed:", err);
-      }
-    }
-
-    /* --- Load Blogs (preview) --- */
-    async function loadBlogs() {
-      try {
-        const q = query(collection(db, "blogs"), orderBy("createdAt", "desc"), limit(6));
-        const snaps = await getDocs(q);
-        const wrap = document.getElementById("blogPreview");
-        wrap.innerHTML = "";
-
-        if (snaps.empty) {
-          wrap.innerHTML = '<p style="color:var(--text-dim); font-size:13px;">এখনো কোনো ব্লগ যুক্ত করা হয়নি।</p>';
-          return;
-        }
-
-        snaps.forEach((docSnap) => {
-          const b = docSnap.data();
-          const card = document.createElement(b.link ? "a" : "div");
-          if (b.link) card.href = b.link;
-          card.className = "glass swipe-card";
-          card.innerHTML = `
-            ${b.image ? `<img src="${b.image}" class="cover" alt="${b.title || ''}" />` : ""}
-            <div>
-              <h4>${b.title || ""}</h4>
-              <p>${b.desc || ""}</p>
-            </div>
-          `;
-          wrap.appendChild(card);
-        });
-      } catch (err) {
-        console.error("Blogs load failed:", err);
-      }
-    }
-
-    /* --- Init --- */
-    (async function init() {
-      await Promise.all([
-        loadProfile(),
-        loadSkills(),
-        loadLanguages(),
-        loadProjects(),
-        loadBlogs(),
-      ]);
+      initCarousel();
       refreshIcons();
-    })();
+    }
+
+    /* --- ল্যাঙ্গুয়েজ রেন্ডার --- */
+    function renderLanguages(langList) {
+      const container = document.getElementById("languageContainer");
+      if (!container) return;
+      container.innerHTML = langList.map(l => `
+        <div class="lang-item">
+          <span class="lang-name">${escapeHtml(l.name || '')}</span>
+          <div class="lang-bar"><div class="lang-fill" style="width:${l.fill || '50%'}"></div></div>
+          <span class="lang-level">${escapeHtml(l.level || '')}</span>
+        </div>`).join("");
+    }
+
+    /* --- মোবাইল ক্যারোজেল লজিক --- */
+    function initCarousel() {
+      const track = document.getElementById('track');
+      const dots = document.querySelectorAll('.dot');
+      if (!track || !track.children.length) return;
+
+      const cards = Array.from(track.children);
+      const getStep = () => cards[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 0);
+
+      const setActive = idx => {
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        cards.forEach((c, i) => c.classList.toggle('in-view', i === idx));
+      };
+
+      dots.forEach(dot => dot.addEventListener('click', () => {
+        track.scrollTo({ left: parseInt(dot.dataset.index) * getStep(), behavior: 'smooth' });
+      }));
+
+      track.addEventListener('scroll', () => {
+        const idx = Math.round(track.scrollLeft / getStep());
+        setActive(Math.max(0, Math.min(cards.length - 1, idx)));
+      });
+
+      setActive(0);
+    }
+
+    /* --- প্রজেক্ট ও ব্লগ লোড --- */
+    async function loadData() {
+      try {
+        // রেটিং
+        const rSnap = await getDocs(collection(db, "ratings"));
+        if (!rSnap.empty) {
+          let total = 0;
+          rSnap.forEach(d => total += d.data().stars || 0);
+          const badge = document.getElementById("ratingBadge");
+          if (badge) {
+            badge.textContent = `⭐ ${(total / rSnap.size).toFixed(1)} (${rSnap.size} Reviews)`;
+            badge.style.display = "inline-block";
+          }
+        }
+
+        // প্রজেক্ট
+        const pSnap = await getDocs(query(collection(db, "projects"), orderBy("createdAt", "desc"), limit(6)));
+        const pEl = document.getElementById("projectsPreview");
+        if (pEl) {
+          pEl.innerHTML = pSnap.empty ? `<p style="color:var(--text-dim);font-size:13px;">No projects available.</p>` :
+            pSnap.docs.map(d => {
+              const p = d.data();
+              return `<a href="project_p.html" class="glass swipe-card">
+                <div>
+                  ${p.coverUrl ? `<img src="${p.coverUrl}" class="cover" />` : ""}
+                  <h4>${escapeHtml(p.title || "")}</h4>
+                  <p>${escapeHtml((p.description || "").slice(0, 80))}...</p>
+                </div>
+              </a>`;
+            }).join("");
+        }
+
+        // ব্লগ
+        const bSnap = await getDocs(query(collection(db, "blogs"), orderBy("createdAt", "desc"), limit(6)));
+        const bEl = document.getElementById("blogPreview");
+        if (bEl) {
+          const posts = bSnap.docs.map(d => d.data()).filter(b => b.status === "প্রকাশিত" || b.status === "Published");
+          bEl.innerHTML = posts.length === 0 ? `<p style="color:var(--text-dim);font-size:13px;">No blogs available.</p>` :
+            posts.map(b => `<a href="blog_p.html" class="glass swipe-card">
+              <div>
+                <h4>${escapeHtml(b.title || "")}</h4>
+                <p>${escapeHtml((b.excerpt || b.content || "").slice(0, 80))}...</p>
+              </div>
+            </a>`).join("");
+        }
+
+        refreshIcons();
+      } catch (err) {
+        console.warn("ডাটা লোড ত্রুটি:", err.message);
+      }
+    }
+
+    /* --- অ্যানালিটিক্স ট্র্যাকিং --- */
+    async function trackVisitor() {
+      let id = localStorage.getItem("visitor_id") || ("v_" + Math.random().toString(36).slice(2) + Date.now().toString(36));
+      localStorage.setItem("visitor_id", id);
+      try {
+        await addDoc(collection(db, "analytics_events"), {
+          page: window.location.pathname,
+          referrer: document.referrer || "",
+          visitorId: id,
+          ts: serverTimestamp(),
+        });
+      } catch (e) {}
+    }
+
+    // রান ইনিশিয়ালাইজেশন
+    loadSiteSettings();
+    loadData();
+    trackVisitor();
   </script>
 </body>
 </html>
