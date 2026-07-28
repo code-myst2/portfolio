@@ -1,35 +1,35 @@
+
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>সম্পর্কে — পোর্টফোলিও</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" />
+<title>More — Portfolio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <style>
     :root {
-      --bg-overlay: rgba(5, 5, 10, 0.55);
-      --glass: rgba(255, 255, 255, 0.08);
+      --bg-overlay: rgba(5, 5, 10, 0.70);
+      --glass: rgba(255, 255, 255, 0.07);
       --glass-strong: rgba(255, 255, 255, 0.14);
-      --glass-border: rgba(255, 255, 255, 0.18);
+      --glass-border: rgba(255, 255, 255, 0.16);
       --text: #f5f5f7;
       --text-faint: rgba(245, 245, 247, 0.65);
-      --accent: #d4af37;
-      --accent-soft: rgba(212, 175, 55, 0.25);
+      --accent: #3291ff;
       --radius: 20px;
-      --radius-sm: 14px;
+      --radius-sm: 12px;
     }
     * { box-sizing: border-box; }
     html, body {
       margin: 0;
       min-height: 100vh;
-      font-family: 'Inter', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text);
       -webkit-font-smoothing: antialiased;
     }
     body {
       background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url("bg.jpg") center/cover fixed no-repeat, #0a0a0f;
-      padding: 84px 16px 100px;
+      padding: 68px 16px 110px;
     }
     a { color: inherit; text-decoration: none; }
     ::placeholder { color: var(--text-faint); }
@@ -42,393 +42,646 @@
       border-radius: var(--radius);
     }
 
-    /* ---- টপবার ---- */
+    /* ---- Slim Topbar with Search Icon ---- */
     .topbar {
       position: fixed;
       top: 0; left: 0; right: 0;
-      height: 64px;
+      height: 52px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       padding: 0 16px;
-      background: rgba(10, 10, 15, 0.55);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      background: rgba(10, 10, 15, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--glass-border);
       z-index: 50;
     }
-    .topbar .brand {
-      font-weight: 700;
-      font-size: 17px;
-      letter-spacing: 0.2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .search-wrap {
-      flex: 1;
-      max-width: 340px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .topbar .brand { font-weight: 700; font-size: 15px; letter-spacing: 0.3px; }
+    
+    .search-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
       background: var(--glass);
       border: 1px solid var(--glass-border);
-      border-radius: 999px;
-      padding: 8px 14px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
     }
-    .search-wrap input {
+    .search-icon-btn:hover { background: var(--glass-strong); }
+    .search-icon-btn:active { transform: scale(0.92); }
+
+    .container { max-width: 680px; margin: 0 auto; }
+
+    /* ---- Top User Account Card (Sketch 1224.jpg) ---- */
+    .user-profile-card {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .avatar-wrapper {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .avatar-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-info h3 { margin: 0 0 4px; font-size: 16px; font-weight: 600; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+    .user-info p { margin: 0; font-size: 12.5px; color: var(--text-faint); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+    .auth-action-btn {
+      background: #ffffff;
+      color: #000;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ---- Section Headers ---- */
+    .section-title { 
+      font-size: 13px; 
+      font-weight: 600; 
+      color: var(--text-faint); 
+      margin-bottom: 12px; 
+      text-transform: uppercase; 
+      letter-spacing: 0.6px; 
+    }
+
+    /* ---- Full Policy Cards (Replacing Simple Links) ---- */
+    .policy-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .policy-card {
+      padding: 18px 20px;
+    }
+    .policy-card h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .policy-card h3 i { width: 18px; height: 18px; color: var(--accent); }
+    .policy-card p {
+      margin: 0 0 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-faint);
+    }
+    .policy-card ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12.5px;
+      color: var(--text-faint);
+      line-height: 1.6;
+    }
+
+    /* ---- Footer Section ---- */
+    .site-footer {
+      border-top: 1px solid var(--glass-border);
+      padding-top: 24px;
+      margin-top: 20px;
+    }
+    .footer-brand { margin-bottom: 18px; }
+    .footer-logo { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
+    .footer-tagline { font-size: 12px; color: var(--text-faint); margin: 0; }
+    
+    .footer-cols {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .footer-col h4 { font-size: 13px; font-weight: 600; margin: 0 0 10px; color: #fff; }
+    .footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col ul li a { font-size: 12.5px; color: var(--text-faint); transition: color 0.15s; }
+    .footer-col ul li a:hover { color: #fff; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 16px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+
+    /* ---- Unified Search Overlay Modal (Projects + Blogs) ---- */
+    .search-modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .search-modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .search-box-top {
+      max-width: 600px;
+      width: 100%;
+      margin: 10px auto 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 6px 14px;
+    }
+    .search-box-top input {
       flex: 1;
       background: none;
       border: none;
       outline: none;
-      color: var(--text);
+      color: #fff;
       font-size: 14px;
       font-family: inherit;
     }
-    .search-wrap i { width: 16px; height: 16px; color: var(--text-faint); flex-shrink: 0; }
+    .search-close-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .search-results-area {
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .search-item {
+      padding: 12px 16px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: background 0.2s;
+    }
+    .search-item:hover { background: var(--glass-strong); }
+    .search-item .item-type { font-size: 10px; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+    .search-item .item-title { font-size: 14px; font-weight: 600; color: #fff; }
+    .search-item .item-sub { font-size: 12px; color: var(--text-faint); }
 
-    /* ---- বটম ন্যাভ ---- */
+    /* ---- Auth Modal ---- */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-card {
+      background: rgba(15, 15, 20, 0.95);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      width: 100%; max-width: 360px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
+    .modal-card h3 { margin: 0 0 6px; font-size: 18px; text-align: center; }
+    .modal-card p { font-size: 12px; color: var(--text-faint); text-align: center; margin-bottom: 18px; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: #fff; cursor: pointer; }
+    
+    .auth-btn {
+      width: 100%; padding: 10px; border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.08);
+      color: #fff; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;
+      cursor: pointer; margin-bottom: 10px; font-family: inherit;
+    }
+    .auth-btn:hover { background: rgba(255, 255, 255, 0.15); }
+    .divider { text-align: center; font-size: 11px; color: var(--text-faint); margin: 12px 0; }
+    .auth-input {
+      width: 100%; padding: 10px; border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.5);
+      color: #fff; font-size: 13px; margin-bottom: 10px; outline: none; font-family: inherit;
+    }
+
+    /* ---- Bottom Nav Tabs in English ---- */
     .bottom-nav {
       position: fixed;
-      bottom: 14px;
-      left: 50%;
+      bottom: 14px; left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      gap: 4px;
-      padding: 8px;
+      display: flex; gap: 4px; padding: 6px;
       z-index: 50;
       width: min(420px, calc(100% - 24px));
     }
     .bottom-nav a {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      padding: 8px 4px;
-      border-radius: var(--radius-sm);
-      font-size: 10px;
-      color: var(--text-faint);
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 8px 4px; border-radius: 12px; font-size: 10px; color: var(--text-faint);
       transition: background 0.15s, color 0.15s;
     }
-    .bottom-nav a i { width: 20px; height: 20px; }
-    .bottom-nav a.active {
-      color: var(--accent);
-      background: var(--accent-soft);
-    }
-
-    .container { max-width: 720px; margin: 0 auto; }
-
-    .avatar {
-      width: 96px; height: 96px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--glass-border);
-      box-shadow: 0 0 0 6px var(--accent-soft);
-      display: block;
-      margin: 0 auto 16px;
-    }
-
-    .card {
-      padding: 18px;
-      margin-bottom: 14px;
-    }
-    .card h3 { margin: 0 0 6px; font-size: 16px; }
-    .card p { margin: 0; color: var(--text-faint); font-size: 13.5px; line-height: 1.6; }
-    .cover {
-      width: 100%; height: 150px; object-fit: cover;
-      border-radius: var(--radius-sm);
-      margin-bottom: 12px;
-      border: 1px solid var(--glass-border);
-    }
-    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .tag {
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: var(--glass-strong);
-      border: 1px solid var(--glass-border);
-      color: var(--text-faint);
-    }
-    .badge {
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    h1.hero-title { text-align: center; font-size: 24px; margin: 4px 0 4px; }
-    p.hero-tagline { text-align: center; color: var(--text-faint); margin: 0 0 20px; font-size: 14px; }
-
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 12px 20px;
-      border-radius: 999px;
-      border: 1px solid var(--glass-border);
-      background: var(--glass-strong);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-accent {
-      background: var(--accent);
-      color: #1a1400;
-      border-color: var(--accent);
-    }
-    .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
-
-    .social-row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
-    .social-row a {
-      width: 40px; height: 40px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 50%;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-    }
-    .social-row a i { width: 18px; height: 18px; }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--glass-border);
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      margin-bottom: 12px;
-    }
-    label { font-size: 12px; color: var(--text-faint); display: block; margin-bottom: 6px; }
-
-    .empty-state { text-align: center; padding: 40px 12px; color: var(--text-faint); }
-
-    .star-row { display: flex; gap: 4px; margin: 6px 0; }
-    .star-row i { width: 15px; height: 15px; color: var(--accent); }
-
-    section.block { margin-bottom: 28px; }
-    section.block h2 {
-      font-size: 15px;
-      margin: 0 0 12px;
-      color: var(--text-faint);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-
-    /* ---- চ্যাট ---- */
-    .chat-box { display: flex; flex-direction: column; height: 46vh; }
-    .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px; }
-    .msg { max-width: 78%; padding: 9px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; }
-    .msg.me { align-self: flex-end; background: var(--accent); color: #1a1400; border-bottom-right-radius: 4px; }
-    .msg.other { align-self: flex-start; background: var(--glass-strong); border-bottom-left-radius: 4px; }
-    .chat-input-row { display: flex; gap: 8px; margin-top: 10px; }
-    .chat-input-row input { margin-bottom: 0; }
+    .bottom-nav a.active { color: #ffffff; background: rgba(255, 255, 255, 0.14); }
+    .bottom-nav a i { width: 18px; height: 18px; }
 </style>
 </head>
 <body>
+
+  <!-- Topbar with Search Icon -->
   <div class="topbar">
-    <div class="brand" id="brandName">পোর্টফোলিও</div>
-    <form class="search-wrap" id="searchForm">
-      <i data-lucide="search"></i>
-      <input type="text" id="searchInput" placeholder="খুঁজুন..." autocomplete="off" />
-    </form>
+    <div class="brand" id="brandTitle">Portfolio</div>
+    <button class="search-icon-btn" id="openSearchBtn" title="Search Projects & Blogs">
+      <i data-lucide="search" style="width:16px;height:16px;"></i>
+    </button>
   </div>
 
   <div class="container">
-    <h1 class="hero-title">সম্পর্কে</h1>
-    <div class="glass card" id="bioCard">
-      <p id="bioText">লোড হচ্ছে...</p>
+    
+    <!-- User Account Header Card (Sketch 1224.jpg) -->
+    <div class="glass user-profile-card">
+      <div class="avatar-wrapper" id="userAvatarWrap">
+        <span id="avatarLetter">G</span>
+      </div>
+      <div class="user-info">
+        <h3 id="userName">Guest User</h3>
+        <p id="userEmail">Not logged in</p>
+      </div>
+      <button class="auth-action-btn" id="authActionBtn">Sign In</button>
     </div>
-    <div class="social-row" id="socialRow"></div>
 
-    <section class="block" style="margin-top:28px;">
-      <h2><i data-lucide="star" style="width:14px;height:14px;vertical-align:-2px;"></i> রিভিউ ও রেটিং</h2>
-      <p class="hero-tagline" id="avgRatingLabel" style="text-align:left;"></p>
-
-      <div class="glass card">
-        <label>নাম</label>
-        <input type="text" id="rateName" placeholder="আপনার নাম" />
-        <label>রেটিং</label>
-        <div class="star-row" id="starPicker">
-          <i data-lucide="star" data-val="1"></i>
-          <i data-lucide="star" data-val="2"></i>
-          <i data-lucide="star" data-val="3"></i>
-          <i data-lucide="star" data-val="4"></i>
-          <i data-lucide="star" data-val="5"></i>
-        </div>
-        <label>মন্তব্য</label>
-        <textarea id="rateComment" rows="2" placeholder="আপনার অভিজ্ঞতা লিখুন..."></textarea>
-        <button class="btn btn-accent" id="rateSubmitBtn" style="width:100%;"><i data-lucide="send"></i> জমা দিন</button>
-        <p id="rateStatus" style="text-align:center;font-size:12.5px;margin-top:8px;color:var(--text-faint);"></p>
+    <!-- Legal Policies Section (Full Policy Details) -->
+    <div class="section-title">Legal Policies & Agreements</div>
+    <div class="policy-list">
+      
+      <!-- 1. Terms & Conditions -->
+      <div class="glass policy-card">
+        <h3><i data-lucide="file-text"></i> Terms & Conditions</h3>
+        <p>By accessing and using this portfolio platform, you agree to comply with and be bound by the following terms. All content, projects, and codebase featured here are intellectual property unless stated otherwise.</p>
+        <ul>
+          <li>All projects and code samples are for personal preview and portfolio demonstration.</li>
+          <li>Unauthorized cloning or redistributing of proprietary source code is strictly prohibited.</li>
+          <li>Users must interact respectfully in the live chat system without spamming.</li>
+        </ul>
       </div>
 
-      <div id="ratingsList" style="margin-top:16px;"></div>
-    </section>
+      <!-- 2. Privacy Policy -->
+      <div class="glass policy-card">
+        <h3><i data-lucide="shield-check"></i> Privacy Policy</h3>
+        <p>Your privacy is important to us. We only collect minimal information required to authenticate your account and manage live chat conversations.</p>
+        <ul>
+          <li><strong>Information Collected:</strong> Name, Email, and Google/Apple public profile information upon login.</li>
+          <li><strong>Data Usage:</strong> Messages and login credentials are stored securely via Firebase Authentication & Cloud Firestore.</li>
+          <li>We never sell or share your personal data with third-party advertising companies.</li>
+        </ul>
+      </div>
+
+      <!-- 3. Refund Policy -->
+      <div class="glass policy-card">
+        <h3><i data-lucide="rotate-ccw"></i> Refund Policy</h3>
+        <p>For custom web development services or digital consultations initiated via this platform:</p>
+        <ul>
+          <li>Advance deposits for project development are refundable up to 50% prior to development commencement.</li>
+          <li>Once project milestones are completed and delivered, payments are non-refundable.</li>
+          <li>Any dissatisfaction regarding completed work will be addressed through revision cycles.</li>
+        </ul>
+      </div>
+
+      <!-- 4. Cookie Policy -->
+      <div class="glass policy-card">
+        <h3><i data-lucide="cookie"></i> Cookie Policy</h3>
+        <p>This website utilizes local browser storage and minimal session cookies to enhance user experience.</p>
+        <ul>
+          <li><strong>Authentication Cookies:</strong> Keep you signed in securely across different pages.</li>
+          <li><strong>Local Storage:</strong> Remembers your chat session tokens and preference states locally in your browser.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <div class="footer-logo" id="footerBrand">Portfolio</div>
+        <p class="footer-tagline" id="footerTagline">Building clean, scalable, and interactive web experiences.</p>
+      </div>
+
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="project_p.html">Projects</a></li>
+            <li><a href="contract.html">Chat</a></li>
+            <li><a href="blog_p.html">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#privacy">Privacy Policy</a></li>
+            <li><a href="#terms">Terms & Conditions</a></li>
+            <li><a href="#refund">Refund Policy</a></li>
+            <li><a href="#cookie">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="year"></span> Portfolio. All rights reserved.</p>
+      </div>
+    </footer>
+
   </div>
 
+  <!-- Unified Search Overlay Modal (Searches Projects & Blogs) -->
+  <div class="search-modal-overlay" id="searchModal">
+    <div class="search-box-top">
+      <i data-lucide="search" style="width:16px;height:16px;color:var(--text-faint);"></i>
+      <input type="text" id="unifiedSearchInput" placeholder="Search projects & blog posts..." autocomplete="off" />
+      <button class="search-close-btn" id="closeSearchBtn"><i data-lucide="x" style="width:18px;height:18px;"></i></button>
+    </div>
+    <div class="search-results-area" id="searchResultsArea">
+      <div style="text-align:center; padding:30px; color:var(--text-faint); font-size:13px;">
+        Type something above to search projects and blogs...
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign In / Sign Up Modal -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeAuthModal"><i data-lucide="x"></i></button>
+      <h3>Sign In / Sign Up</h3>
+      <p>Connect your account to save settings and messages</p>
+      
+      <button class="auth-btn" id="googleAuthBtn"><i data-lucide="chrome"></i> Continue with Google</button>
+      <button class="auth-btn" id="appleAuthBtn"><i data-lucide="apple"></i> Continue with Apple</button>
+
+      <div class="divider">Or use Email</div>
+
+      <input type="email" id="modalEmail" class="auth-input" placeholder="Your Email" />
+      <input type="password" id="modalPassword" class="auth-input" placeholder="Password" />
+      <button class="auth-btn" id="emailAuthBtn" style="background: #ffffff; color: #000000; font-weight: 600;">Continue</button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation (Home = index.html) -->
   <nav class="bottom-nav glass">
-      <a href="home.html" class=""><i data-lucide="home"></i><span>হোম</span></a>
-      <a href="project_p.html" class=""><i data-lucide="folder-kanban"></i><span>প্রজেক্ট</span></a>
-      <a href="contract.html" class=""><i data-lucide="message-circle"></i><span>চ্যাট</span></a>
-      <a href="blog_p.html" class=""><i data-lucide="file-text"></i><span>ব্লগ</span></a>
-      <a href="more.html" class="active"><i data-lucide="more-horizontal"></i><span>মোর</span></a>
+      <a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+      <a href="project_p.html"><i data-lucide="folder-kanban"></i><span>Projects</span></a>
+      <a href="contract.html"><i data-lucide="message-circle"></i><span>Chat</span></a>
+      <a href="blog_p.html"><i data-lucide="file-text"></i><span>Blog</span></a>
+      <a href="more.html" class="active"><i data-lucide="more-horizontal"></i><span>More</span></a>
   </nav>
 
+  <!-- Firebase Script & Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-    import {
-      getFirestore, doc, getDoc, collection, addDoc, getDocs,
-      query, orderBy, serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { 
+  getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, 
+  signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut 
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
-      authDomain: "test-pro-portfolio.firebaseapp.com",
-      projectId: "test-pro-portfolio",
-      storageBucket: "test-pro-portfolio.firebasestorage.app",
-      messagingSenderId: "368597108521",
-      appId: "1:368597108521:web:ea84f26576e757ee3c5938",
-      measurementId: "G-70622PC5Q4",
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+// ফায়ারবেস কনফিগারেশন
+const firebaseConfig = {
+  apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
+  authDomain: "test-pro-portfolio.firebaseapp.com",
+  projectId: "test-pro-portfolio",
+  storageBucket: "test-pro-portfolio.firebasestorage.app",
+  messagingSenderId: "368597108521",
+  appId: "1:368597108521:web:ea84f26576e757ee3c5938",
+  measurementId: "G-70622PC5Q4",
+};
 
-    lucide.createIcons();
+// ইনিশিয়ালাইজেশন
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-    /* ---- টপবারে siteTitle বসানো ---- */
-    getDoc(doc(db, "settings", "site")).then((snap) => {
-      if (snap.exists() && snap.data().siteTitle) {
-        document.getElementById("brandName").textContent = snap.data().siteTitle;
+// Lucide আইকন এবং বছর আপডেট
+lucide.createIcons();
+const yearEl = document.getElementById('year');
+if (yearEl) {
+  yearEl.textContent = new Date().getFullYear();
+}
+
+let currentUser = null;
+let allProjects = [];
+let allBlogs = [];
+
+// এলিমেন্ট রেফারেন্সসমূহ
+const authModal = document.getElementById("authModal");
+const closeAuthModal = document.getElementById("closeAuthModal");
+
+if (closeAuthModal && authModal) {
+  closeAuthModal.addEventListener("click", () => authModal.classList.remove("open"));
+}
+
+/* ---- ১. সাইটের শিরোনাম ও অন্যান্য তথ্য লোড করা ---- */
+async function loadSiteSettings() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "site"));
+    if (snap.exists()) {
+      const s = snap.data();
+      if (s.siteTitle) {
+        const brandTitle = document.getElementById("brandTitle");
+        const footerBrand = document.getElementById("footerBrand");
+        if (brandTitle) brandTitle.textContent = s.siteTitle;
+        if (footerBrand) footerBrand.textContent = s.siteTitle;
       }
-    }).catch(() => {});
-
-    function escapeHtml(s = "") {
-      return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-    }
-
-    /* ---- বায়ো ও সোশ্যাল ---- */
-    try {
-      const snap = await getDoc(doc(db, "settings", "site"));
-      if (snap.exists()) {
-        const s = snap.data();
-        document.getElementById("bioText").textContent = s.bio || "কোনো তথ্য যোগ করা হয়নি।";
-        const social = document.getElementById("socialRow");
-        const links = [
-          ["mail", s.email ? "mailto:" + s.email : null],
-          ["facebook", s.facebook],
-          ["linkedin", s.linkedin],
-          ["github", s.github],
-        ];
-        links.forEach(([icon, url]) => {
-          if (!url) return;
-          const a = document.createElement("a");
-          a.href = url; a.target = "_blank"; a.rel = "noopener";
-          a.innerHTML = `<i data-lucide="${icon}"></i>`;
-          social.appendChild(a);
-        });
-        lucide.createIcons();
+      if (s.tagline) {
+        const footerTagline = document.getElementById("footerTagline");
+        if (footerTagline) footerTagline.textContent = s.tagline;
       }
-    } catch (err) { console.warn("বায়ো লোড ব্যর্থ:", err.message); }
-
-    /* ---- স্টার পিকার ---- */
-    let selectedStars = 0;
-    const starIcons = document.querySelectorAll("#starPicker i");
-    function paintStars(n) {
-      starIcons.forEach((el) => {
-        el.style.color = Number(el.dataset.val) <= n ? "var(--accent)" : "rgba(255,255,255,0.25)";
-      });
     }
-    paintStars(0);
-    starIcons.forEach((el) => el.addEventListener("click", () => {
-      selectedStars = Number(el.dataset.val);
-      paintStars(selectedStars);
-    }));
+  } catch (err) {
+    console.warn("সাইটের তথ্য লোড করা যায়নি:", err);
+  }
+}
 
-    /* ---- রেটিং সাবমিট ---- */
-    document.getElementById("rateSubmitBtn").addEventListener("click", async () => {
-      const name = document.getElementById("rateName").value.trim();
-      const comment = document.getElementById("rateComment").value.trim();
-      const status = document.getElementById("rateStatus");
-      if (!name || !selectedStars) { status.textContent = "নাম আর রেটিং দিন"; return; }
+/* ---- ২. ইউজার অথেনটিকেশন স্টেট ট্র্যাকিং ---- */
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  const avatarWrap = document.getElementById("userAvatarWrap");
+  const nameEl = document.getElementById("userName");
+  const emailEl = document.getElementById("userEmail");
+  const actionBtn = document.getElementById("authActionBtn");
+
+  if (user) {
+    if (authModal) authModal.classList.remove("open");
+    if (nameEl) nameEl.textContent = user.displayName || "User";
+    if (emailEl) emailEl.textContent = user.email || "";
+    if (actionBtn) actionBtn.textContent = "Sign Out";
+    
+    if (avatarWrap) {
+      if (user.photoURL) {
+        avatarWrap.innerHTML = `<img src="${user.photoURL}" alt="User Avatar" />`;
+      } else {
+        const initial = (user.displayName || user.email || 'U')[0].toUpperCase();
+        avatarWrap.innerHTML = `<span>${initial}</span>`;
+      }
+    }
+  } else {
+    if (nameEl) nameEl.textContent = "Guest User";
+    if (emailEl) emailEl.textContent = "Not logged in";
+    if (actionBtn) actionBtn.textContent = "Sign In";
+    if (avatarWrap) avatarWrap.innerHTML = `<span>G</span>`;
+  }
+});
+
+const authActionBtn = document.getElementById("authActionBtn");
+if (authActionBtn) {
+  authActionBtn.addEventListener("click", () => {
+    if (currentUser) {
+      signOut(auth);
+    } else if (authModal) {
+      authModal.classList.add("open");
+    }
+  });
+}
+
+/* ---- ৩. প্রজেক্ট ও ব্লগ সার্চ মডাল হ্যান্ডলিং ---- */
+const searchModal = document.getElementById("searchModal");
+const openSearchBtn = document.getElementById("openSearchBtn");
+const closeSearchBtn = document.getElementById("closeSearchBtn");
+const searchInput = document.getElementById("unifiedSearchInput");
+const searchResultsArea = document.getElementById("searchResultsArea");
+
+if (openSearchBtn && searchModal) {
+  openSearchBtn.addEventListener("click", async () => {
+    searchModal.classList.add("open");
+    if (searchInput) searchInput.focus();
+    
+    // ডাটা একবার লোড না থাকলে ফায়ারবেস থেকে ফেচ করা
+    if (!allProjects.length) {
       try {
-        await addDoc(collection(db, "ratings"), {
-          name, comment, stars: selectedStars, createdAt: serverTimestamp(),
-        });
-        status.textContent = "✓ ধন্যবাদ! রেটিং জমা হয়েছে";
-        document.getElementById("rateName").value = "";
-        document.getElementById("rateComment").value = "";
-        selectedStars = 0; paintStars(0);
-        loadRatings();
-      } catch (err) {
-        status.textContent = "জমা দেওয়া যায়নি: " + err.message;
+        const pSnap = await getDocs(collection(db, "projects"));
+        allProjects = pSnap.docs.map(d => ({ id: d.id, ...d.data(), type: 'Project' }));
+      } catch(e) {
+        console.error("প্রজেক্ট লোড করতে সমস্যা:", e);
       }
-    });
-
-    /* ---- রেটিং লিস্ট ---- */
-    async function loadRatings() {
-      const el = document.getElementById("ratingsList");
+    }
+    if (!allBlogs.length) {
       try {
-        const q = query(collection(db, "ratings"), orderBy("createdAt", "desc"));
-        const snap = await getDocs(q);
-        if (snap.empty) {
-          el.innerHTML = `<p class="empty-state">এখনো কোনো রিভিউ নেই — প্রথম রিভিউটা আপনিই দিন!</p>`;
-          document.getElementById("avgRatingLabel").textContent = "";
-          return;
-        }
-        let total = 0;
-        const cards = snap.docs.map((d) => {
-          const r = d.data();
-          total += r.stars || 0;
-          const stars = "⭐".repeat(r.stars || 0);
-          return `<div class="glass card">
-            <div style="display:flex;justify-content:space-between;">
-              <h3>${escapeHtml(r.name || "")}</h3>
-              <span style="color:var(--accent);font-size:13px;">${stars}</span>
-            </div>
-            ${r.comment ? `<p>${escapeHtml(r.comment)}</p>` : ""}
-          </div>`;
-        }).join("");
-        el.innerHTML = cards;
-        document.getElementById("avgRatingLabel").textContent =
-          `গড় রেটিং: ⭐ ${(total / snap.size).toFixed(1)} (${snap.size} রিভিউ)`;
-      } catch (err) {
-        el.innerHTML = `<p class="empty-state">রিভিউ লোড করা যায়নি: ${err.message}</p>`;
+        const bSnap = await getDocs(collection(db, "blogs"));
+        allBlogs = bSnap.docs.map(d => ({ id: d.id, ...d.data(), type: 'Blog' }));
+      } catch(e) {
+        console.error("ব্লগ লোড করতে সমস্যা:", e);
       }
     }
-    loadRatings();
+  });
+}
 
-    /* ---- সার্চ — প্রজেক্ট পেজে রিডাইরেক্ট করে ---- */
-    document.getElementById("searchForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const q = document.getElementById("searchInput").value.trim();
-      if (q) window.location.href = "project_p.html?q=" + encodeURIComponent(q);
-    });
+if (closeSearchBtn && searchModal) {
+  closeSearchBtn.addEventListener("click", () => {
+    searchModal.classList.remove("open");
+  });
+}
 
-
-    /* ---- এনালিটিক্স ট্র্যাকিং ---- */
-    function getVisitorId() {
-      let id = localStorage.getItem("visitor_id");
-      if (!id) {
-        id = "v_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
-        localStorage.setItem("visitor_id", id);
-      }
-      return id;
+if (searchInput && searchResultsArea) {
+  searchInput.addEventListener("input", () => {
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) {
+      searchResultsArea.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-faint); font-size:13px;">Type something above to search projects and blogs...</div>`;
+      return;
     }
+
+    const matchedProjects = allProjects.filter(p => (p.title || '').toLowerCase().includes(q) || (p.tech || '').toLowerCase().includes(q));
+    const matchedBlogs = allBlogs.filter(b => (b.title || '').toLowerCase().includes(q) || (b.tags || '').toLowerCase().includes(q));
+
+    const combined = [...matchedProjects, ...matchedBlogs];
+
+    if (!combined.length) {
+      searchResultsArea.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-faint); font-size:13px;">No projects or blogs found matching "${escapeHtml(q)}"</div>`;
+      return;
+    }
+
+    searchResultsArea.innerHTML = combined.map(item => {
+      const link = item.type === 'Project' ? `project_p.html` : `blog_p.html`;
+      return `
+        <a href="${link}" class="search-item">
+          <span class="item-type">${item.type}</span>
+          <span class="item-title">${escapeHtml(item.title || 'Untitled')}</span>
+          <span class="item-sub">${escapeHtml(item.tech || item.excerpt || item.tags || '')}</span>
+        </a>
+      `;
+    }).join("");
+  });
+}
+
+/* ---- ৪. সোশ্যাল অথেন্টিকেশন প্রোভাইডারসমূহ ---- */
+const googleAuthBtn = document.getElementById("googleAuthBtn");
+if (googleAuthBtn) {
+  googleAuthBtn.addEventListener("click", async () => {
+    const provider = new GoogleAuthProvider();
+    try { await signInWithPopup(auth, provider); } catch(e) { alert(e.message); }
+  });
+}
+
+const appleAuthBtn = document.getElementById("appleAuthBtn");
+if (appleAuthBtn) {
+  appleAuthBtn.addEventListener("click", async () => {
+    const provider = new OAuthProvider('apple.com');
+    try { await signInWithPopup(auth, provider); } catch(e) { alert(e.message); }
+  });
+}
+
+const emailAuthBtn = document.getElementById("emailAuthBtn");
+if (emailAuthBtn) {
+  emailAuthBtn.addEventListener("click", async () => {
+    const emailEl = document.getElementById("modalEmail");
+    const passEl = document.getElementById("modalPassword");
+    const email = emailEl ? emailEl.value.trim() : "";
+    const password = passEl ? passEl.value.trim() : "";
+    
+    if (!email || !password) return alert("Please enter email & password");
     try {
-      await addDoc(collection(db, "analytics_events"), {
-        page: window.location.pathname,
-        referrer: document.referrer || "",
-        visitorId: getVisitorId(),
-        ts: serverTimestamp(),
-      });
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      console.warn("ভিজিট ট্র্যাক করা যায়নি:", err.message);
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } catch (err2) { alert(err2.message); }
     }
+  });
+}
+
+// নিরাপত্তা প্রদানকারী Escape HTML ফাংশন
+function escapeHtml(s = "") {
+  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+// পেজ লোড ফাংশন চালনা
+loadSiteSettings();
   </script>
-</body>
-</html>
