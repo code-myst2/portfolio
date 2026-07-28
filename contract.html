@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>যোগাযোগ ও লাইভ চ্যাট — পোর্টফোলিও</title>
+<title>Contact & Live Chat</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <style>
@@ -15,6 +16,7 @@
       --text: #f5f5f7;
       --text-faint: rgba(245, 245, 247, 0.65);
       --accent: #ffffff;
+      --star-color: #f5a623;
       --radius: 20px;
       --radius-sm: 12px;
     }
@@ -144,8 +146,66 @@
     }
     .btn-circle-send:active { transform: scale(0.9); }
 
-    /* ---- সোশ্যাল লিঙ্ক সেকশন (সম্পূর্ণ গ্লাস ট্রান্সপারেন্ট) ---- */
+    /* ---- রিভিউ দেওয়ার সেকশন ---- */
     .section-title { font-size: 13px; font-weight: 600; color: var(--text-faint); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.6px; }
+    
+    .review-card {
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+    .star-select {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-faint);
+      padding: 0;
+      transition: transform 0.15s, color 0.15s;
+    }
+    .star-btn.active, .star-btn:hover {
+      color: var(--star-color);
+      transform: scale(1.1);
+    }
+    .star-btn i { width: 22px; height: 22px; }
+    
+    .review-input-area {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      min-height: 70px;
+      resize: vertical;
+      margin-bottom: 10px;
+    }
+    .review-submit-btn {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .review-status {
+      font-size: 12px;
+      color: var(--text-faint);
+      margin-top: 8px;
+    }
+
+    /* ---- সোশ্যাল লিঙ্ক সেকশন (সম্পূর্ণ গ্লাস) ---- */
     .social-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
     .social-item {
       display: flex;
@@ -226,7 +286,7 @@
       font-family: inherit;
     }
 
-    /* ---- বটম ন্যাভ ---- */
+    /* ---- ইংলিশ ট্যাবের জন্য বটম ন্যাভ ---- */
     .bottom-nav {
       position: fixed;
       bottom: 14px; left: 50%;
@@ -246,12 +306,12 @@
 </head>
 <body>
 
-  <!-- টপবার -->
+  <!-- টপবার (ব্র্যান্ড ফায়ারবেস থেকে আসবে) -->
   <div class="topbar">
-    <div class="brand">CodeMyst</div>
+    <div class="brand" id="brandTitle">Portfolio</div>
     <form class="search-wrap" id="searchForm">
       <i data-lucide="search"></i>
-      <input type="text" id="searchInput" placeholder="খুঁজুন..." autocomplete="off" />
+      <input type="text" id="searchInput" placeholder="Search..." autocomplete="off" />
     </form>
   </div>
 
@@ -261,19 +321,36 @@
     <div class="chat-container-transparent">
       <div class="chat-box">
         <div class="chat-messages" id="chatMessages">
-          <div class="msg other">হ্যালো! কোনো সাহায্য লাগবে? নিচে মেসেজ দিয়ে চ্যাট শুরু করুন।</div>
+          <div class="msg other">Hello! How can I help you today? Type a message below.</div>
         </div>
       </div>
       <div class="chat-input-row">
-        <input type="text" id="chatInput" placeholder="মেসেজ টাইপ করুন..." />
-        <button class="btn-circle-send" id="chatSendBtn" title="পাঠান">
+        <input type="text" id="chatInput" placeholder="Type a message..." />
+        <button class="btn-circle-send" id="chatSendBtn" title="Send">
           <i data-lucide="send" style="width:16px;height:16px;"></i>
         </button>
       </div>
     </div>
 
+    <!-- রিভিউ দেওয়ার সেকশন -->
+    <div class="section-title">Leave a Review</div>
+    <div class="glass review-card">
+      <div class="star-select" id="starSelect">
+        <button class="star-btn active" data-rating="1"><i data-lucide="star"></i></button>
+        <button class="star-btn active" data-rating="2"><i data-lucide="star"></i></button>
+        <button class="star-btn active" data-rating="3"><i data-lucide="star"></i></button>
+        <button class="star-btn active" data-rating="4"><i data-lucide="star"></i></button>
+        <button class="star-btn active" data-rating="5"><i data-lucide="star"></i></button>
+      </div>
+      <textarea id="reviewText" class="review-input-area" placeholder="Write your valuable review or feedback here..."></textarea>
+      <button class="review-submit-btn" id="reviewSubmitBtn">
+        <i data-lucide="check" style="width:14px;height:14px;"></i> Submit Review
+      </button>
+      <div class="review-status" id="reviewStatus"></div>
+    </div>
+
     <!-- সোশ্যাল লিঙ্কসমূহ -->
-    <div class="section-title">সোশ্যাল মিডিয়া প্রোফাইল</div>
+    <div class="section-title">Social Profiles</div>
     <div class="social-list">
       <a href="https://github.com" target="_blank" class="social-item">
         <div class="social-info"><i data-lucide="github"></i> GitHub Profile</div>
@@ -294,15 +371,15 @@
     </div>
 
     <!-- FAQ সেকশন -->
-    <div class="section-title">সাধারণ প্রশ্নাবলী (FAQ)</div>
+    <div class="section-title">Frequently Asked Questions (FAQ)</div>
     <div class="faq-list">
       <div class="glass faq-item">
-        <h4>১. সাধারণত কত সময়ের মধ্যে মেসেজের উত্তর পাওয়া যায়?</h4>
-        <p>লাইভ চ্যাটে মেসেজ পাঠালে খুব দ্রুত অথবা সর্বোচ্চ ২৪ ঘণ্টার মধ্যে উত্তর দেওয়া হয়।</p>
+        <h4>1. How quickly do you respond?</h4>
+        <p>I usually respond within a few hours or maximum within 24 hours.</p>
       </div>
       <div class="glass faq-item">
-        <h4>২. আগের চ্যাট হিস্ট্রি কীভাবে সংরক্ষিত থাকে?</h4>
-        <p>সাইন ইন করার পর আপনার বার্তাগুলো ফায়ারবেসে অ্যাকাউন্টের সাথে যুক্ত থাকে, ফলে পরবর্তীতেও বার্তাগুলো পাবেন।</p>
+        <h4>2. How is chat history saved?</h4>
+        <p>Once signed in, your messages are synced safely with your account using Firebase.</p>
       </div>
     </div>
 
@@ -312,27 +389,27 @@
   <div class="modal-overlay" id="authModal">
     <div class="modal-card">
       <button class="modal-close" id="closeModal"><i data-lucide="x"></i></button>
-      <h3>সাইন ইন / সাইন আপ</h3>
-      <p>মেসেজ পাঠাতে এবং আগের মেসেজ সংরক্ষিত রাখতে অ্যাকাউন্টে প্রবেশ করুন</p>
+      <h3>Sign In / Sign Up</h3>
+      <p>Sign in to send messages and keep your chat history saved</p>
       
-      <button class="auth-btn" id="googleAuthBtn"><i data-lucide="chrome"></i> Google দিয়ে প্রবেশ করুন</button>
-      <button class="auth-btn" id="appleAuthBtn"><i data-lucide="apple"></i> Apple দিয়ে প্রবেশ করুন</button>
+      <button class="auth-btn" id="googleAuthBtn"><i data-lucide="chrome"></i> Continue with Google</button>
+      <button class="auth-btn" id="appleAuthBtn"><i data-lucide="apple"></i> Continue with Apple</button>
 
-      <div class="divider">অথবা ইমেইল ব্যবহার করুন</div>
+      <div class="divider">Or use Email</div>
 
-      <input type="email" id="modalEmail" class="auth-input" placeholder="আপনার ইমেইল" />
-      <input type="password" id="modalPassword" class="auth-input" placeholder="পাসওয়ার্ড" />
-      <button class="auth-btn" id="emailAuthBtn" style="background: #ffffff; color: #000000; font-weight: 600;">কন্টিনিউ করুন</button>
+      <input type="email" id="modalEmail" class="auth-input" placeholder="Your Email" />
+      <input type="password" id="modalPassword" class="auth-input" placeholder="Password" />
+      <button class="auth-btn" id="emailAuthBtn" style="background: #ffffff; color: #000000; font-weight: 600;">Continue</button>
     </div>
   </div>
 
-  <!-- বটম ন্যাভ -->
+  <!-- ইংলিশ ট্যাবের বটম ন্যাভিগেশন (Home = index.html) -->
   <nav class="bottom-nav glass">
-      <a href="home.html"><i data-lucide="home"></i><span>হোম</span></a>
-      <a href="project_p.html"><i data-lucide="folder-kanban"></i><span>প্রজেক্ট</span></a>
-      <a href="contract.html" class="active"><i data-lucide="message-circle"></i><span>চ্যাট</span></a>
-      <a href="blog_p.html"><i data-lucide="file-text"></i><span>ব্লগ</span></a>
-      <a href="more.html"><i data-lucide="more-horizontal"></i><span>মোর</span></a>
+      <a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+      <a href="project_p.html"><i data-lucide="folder-kanban"></i><span>Projects</span></a>
+      <a href="contract.html" class="active"><i data-lucide="message-circle"></i><span>Chat</span></a>
+      <a href="blog_p.html"><i data-lucide="file-text"></i><span>Blog</span></a>
+      <a href="more.html"><i data-lucide="more-horizontal"></i><span>More</span></a>
   </nav>
 
   <!-- Firebase JavaScript Logic -->
@@ -343,7 +420,7 @@
       signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
     import { 
-      getFirestore, collection, addDoc, doc, setDoc, onSnapshot, orderBy, query, serverTimestamp, increment 
+      getFirestore, collection, addDoc, doc, getDoc, setDoc, onSnapshot, orderBy, query, serverTimestamp, increment 
     } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -365,13 +442,25 @@
     let currentUser = null;
     let convoId = localStorage.getItem("chat_convo_id");
     let unsubMessages = null;
+    let selectedRating = 5;
 
     const authModal = document.getElementById("authModal");
     const closeModal = document.getElementById("closeModal");
 
     closeModal.addEventListener("click", () => authModal.classList.remove("open"));
 
-    // Auth state listener
+    /* ---- 1. ফায়ারবেস থেকে Site Title লোড ---- */
+    try {
+      getDoc(doc(db, "settings", "site")).then((snap) => {
+        if (snap.exists() && snap.data().siteTitle) {
+          document.getElementById("brandTitle").textContent = snap.data().siteTitle;
+        }
+      });
+    } catch (err) {
+      console.warn("Could not fetch site title", err);
+    }
+
+    /* ---- Auth State Listener ---- */
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) {
@@ -389,7 +478,7 @@
       unsubMessages = onSnapshot(q, (snap) => {
         const chatMessages = document.getElementById("chatMessages");
         if(snap.empty) {
-          chatMessages.innerHTML = `<div class="msg other">হ্যালো ${escapeHtml(user.displayName || 'ইউজার')}! কীভাবে সাহায্য করতে পারি?</div>`;
+          chatMessages.innerHTML = `<div class="msg other">Hello ${escapeHtml(user.displayName || 'Visitor')}! How can I help you today?</div>`;
           return;
         }
         chatMessages.innerHTML = snap.docs.map((d) => {
@@ -401,6 +490,7 @@
       });
     }
 
+    /* ---- 2. লাইভ চ্যাট মেসেজ সেন্ড ---- */
     async function sendChat() {
       const input = document.getElementById("chatInput");
       const text = input.value.trim();
@@ -418,7 +508,7 @@
         });
 
         await setDoc(doc(db, "conversations", convoId), {
-          name: currentUser.displayName || currentUser.email || "ভিজিটর",
+          name: currentUser.displayName || currentUser.email || "Visitor",
           email: currentUser.email || "",
           lastMessage: text,
           lastTs: serverTimestamp(),
@@ -426,30 +516,81 @@
         }, { merge: true });
 
       } catch (err) {
-        console.error("মেসেজ পাঠাতে সমস্যা:", err);
+        console.error("Error sending message:", err);
       }
     }
 
     document.getElementById("chatSendBtn").addEventListener("click", sendChat);
     document.getElementById("chatInput").addEventListener("keydown", (e) => e.key === "Enter" && sendChat());
 
-    // Google Auth
+    /* ---- 3. স্টার রেটিং ও রিভিউ সিস্টেম ---- */
+    const starBtns = document.querySelectorAll(".star-btn");
+    starBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        selectedRating = parseInt(btn.dataset.rating);
+        starBtns.forEach(b => {
+          const r = parseInt(b.dataset.rating);
+          if (r <= selectedRating) {
+            b.classList.add("active");
+          } else {
+            b.classList.remove("active");
+          }
+        });
+      });
+    });
+
+    document.getElementById("reviewSubmitBtn").addEventListener("click", async () => {
+      const reviewText = document.getElementById("reviewText").value.trim();
+      const statusEl = document.getElementById("reviewStatus");
+
+      if (!currentUser) {
+        authModal.classList.add("open");
+        return;
+      }
+
+      if (!reviewText) {
+        statusEl.textContent = "Please write a few words before submitting.";
+        statusEl.style.color = "#f5455c";
+        return;
+      }
+
+      statusEl.textContent = "Submitting review...";
+      statusEl.style.color = "var(--text-faint)";
+
+      try {
+        await addDoc(collection(db, "reviews"), {
+          userId: currentUser.uid,
+          userName: currentUser.displayName || currentUser.email || "Anonymous",
+          userEmail: currentUser.email || "",
+          rating: selectedRating,
+          review: reviewText,
+          createdAt: serverTimestamp()
+        });
+
+        statusEl.textContent = "✓ Thank you! Your review has been submitted.";
+        statusEl.style.color = "#46c76b";
+        document.getElementById("reviewText").value = "";
+      } catch (err) {
+        statusEl.textContent = "Failed to submit review: " + err.message;
+        statusEl.style.color = "#f5455c";
+      }
+    });
+
+    /* ---- 4. সোশ্যাল অথেন্টিকেশন ---- */
     document.getElementById("googleAuthBtn").addEventListener("click", async () => {
       const provider = new GoogleAuthProvider();
       try { await signInWithPopup(auth, provider); } catch(e) { alert(e.message); }
     });
 
-    // Apple Auth
     document.getElementById("appleAuthBtn").addEventListener("click", async () => {
       const provider = new OAuthProvider('apple.com');
       try { await signInWithPopup(auth, provider); } catch(e) { alert(e.message); }
     });
 
-    // Email Auth
     document.getElementById("emailAuthBtn").addEventListener("click", async () => {
       const email = document.getElementById("modalEmail").value.trim();
       const password = document.getElementById("modalPassword").value.trim();
-      if (!email || !password) return alert("ইমেইল ও পাসওয়ার্ড লিখুন");
+      if (!email || !password) return alert("Please enter email & password");
       try {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (err) {
