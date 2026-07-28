@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Home — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<!-- Lucide Icons Script -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+    :root {
+      --bg: #0b0d10;
+      --bg-overlay: rgba(11, 13, 16, 0.88);
+      --bg-elev: #12151a;
+      --line: #22262d;
+      --text: #e8eaed;
+      --text-dim: #8a919c;
+      --accent: #d4af37;
+      --accent-soft: rgba(212, 175, 55, 0.25);
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-strong: rgba(255, 255, 255, 0.12);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --a: #7dd3b0;
+      --b: #c99bff;
+      --c: #ff9d6c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    html, body {
+      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
+      color: var(--text);
+      background-color: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url("bg.jpg") center/cover fixed no-repeat, #0b0d10;
+      padding: 74px 16px 90px;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .container { max-width: 820px; margin: 0 auto; }
+
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+    }
+
+    svg.lucide, [data-lucide] {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    /* ---- TOPBAR ---- */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: rgba(11, 13, 16, 0.75);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 50;
+    }
+    .topbar .brand {
+      font-weight: 700;
+      font-size: 18px;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .icon-btn {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .icon-btn:hover { background: var(--glass-strong); }
+
+    /* ---- HERO SECTION ---- */
+    .hero-section {
+      text-align: center;
+      padding: 20px 0 10px;
+    }
+    .avatar {
+      width: 105px; height: 105px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--glass-border);
+      box-shadow: 0 0 0 6px var(--accent-soft);
+      display: block;
+      margin: 0 auto 16px;
+    }
+    h1.hero-title { font-size: 26px; margin-bottom: 6px; font-family: 'Space Grotesk', sans-serif; }
+    p.hero-tagline { color: var(--text-dim); margin-bottom: 18px; font-size: 14.5px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 22px;
+      border-radius: 999px;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-strong);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-accent {
+      background: var(--accent);
+      color: #0b0d10;
+      border-color: var(--accent);
+    }
+    .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+
+    .badge {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    /* ---- ABOUT SECTION ---- */
+    .about-card {
+      padding: 22px;
+      margin: 30px 0;
+    }
+    .about-card h3 { font-size: 18px; margin-bottom: 10px; font-family: 'Space Grotesk', sans-serif; }
+    .about-card p { color: var(--text-dim); font-size: 14px; line-height: 1.6; }
+
+    .read-more-btn {
+      color: var(--accent);
+      background: none;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+    }
+    .read-more-btn:hover { text-decoration: underline; }
+
+    .rec-btns { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+    .rec-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--glass-strong);
+      border: 1px solid var(--glass-border);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ---- SKILLS SECTION ---- */
+    .skills-wrap { margin: 40px 0; }
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .sec-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(22px, 4vw, 32px);
+      margin-bottom: 36px;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .root-card {
+      border: 1px solid var(--line);
+      background: var(--bg-elev);
+      border-radius: 14px;
+      padding: 18px 26px;
+      width: fit-content;
+      margin: 0 auto 32px;
+      text-align: center;
+      box-shadow: 0 0 0 6px rgba(232,234,237,0.03);
+    }
+    .root-card .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .root-card .name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; }
+
+    .branches-desktop {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .branch { display: flex; flex-direction: column; align-items: center; }
+    .branch-card {
+      border: 1px solid var(--line);
+      background: var(--bg-elev);
+      border-radius: 12px;
+      padding: 16px;
+      width: 100%;
+      border-top: 3px solid var(--accent-color, #7dd3b0);
+      text-align: center;
+    }
+    .branch-card .name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+    .branch-card .desc { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
+    .stem { width: 1.5px; height: 22px; opacity: 0.5; }
+    .leaves { display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; }
+    .leaf {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--accent-color, #7dd3b0);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      white-space: nowrap;
+      text-align: center;
+    }
+    .leaf.learning { background: transparent; border-style: dashed; opacity: 0.9; }
+    .leaf.learning::after {
+      content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+      background: currentColor; margin-left: 6px; vertical-align: middle;
+    }
+
+    .branches-mobile { display: none; }
+    .carousel-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 14px;
+      padding: 4px 5% 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .carousel-track::-webkit-scrollbar { display: none; }
+
+    .skill-card-m {
+      flex: 0 0 88%;
+      scroll-snap-align: center;
+      border: 1px solid var(--line);
+      background: var(--bg-elev);
+      border-radius: 16px;
+      padding: 22px 20px;
+      border-top: 3px solid var(--accent-color, #7dd3b0);
+      opacity: 0.45;
+      transform: scale(0.94);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .skill-card-m.in-view { opacity: 1; transform: scale(1); }
+    .skill-card-m .name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; margin-bottom: 6px; }
+    .skill-card-m .desc { font-size: 13px; color: var(--text-dim); line-height: 1.5; margin-bottom: 18px; }
+    .skill-card-m .list-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .skill-card-m .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .skill-card-m .chip {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 6px 12px;
+      border-radius: 20px; border: 1px solid var(--accent-color, #7dd3b0);
+      background: rgba(255,255,255,0.02); color: var(--text);
+    }
+    .skill-card-m .chip.learning { background: transparent; border-style: dashed; }
+
+    .dots { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--line); border: none; padding: 0; cursor: pointer;
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+    .dot.active { background: var(--accent-active, var(--text)); transform: scale(1.25); }
+    .swipe-hint {
+      text-align: center; font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--text-dim); margin-top: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .branches-desktop { display: none; }
+      .branches-mobile { display: block; }
+    }
+
+    /* ---- LANGUAGES SECTION ---- */
+    .lang-section {
+      padding: 20px;
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      margin: 30px 0 40px;
+    }
+    .lang-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; font-family: 'Space Grotesk', sans-serif; }
+    .lang-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .lang-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+    .lang-name { font-size: 12.5px; font-weight: 600; }
+    .lang-bar { width: 100%; height: 5px; background: var(--line); border-radius: 4px; overflow: hidden; }
+    .lang-fill { height: 100%; background: var(--accent); border-radius: 4px; }
+    .lang-level { font-size: 10px; color: var(--text-dim); }
+
+    @media (max-width: 480px) { .lang-row { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
+
+    /* ---- SWIPEABLE CAROUSEL ---- */
+    .carousel-wrap {
+      display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .carousel-wrap::-webkit-scrollbar { display: none; }
+    .swipe-card {
+      flex: 0 0 280px; scroll-snap-align: start; padding: 16px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .swipe-card .cover { width: 100%; height: 130px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 12px; }
+    .swipe-card h4 { font-size: 15px; margin-bottom: 6px; }
+    .swipe-card p { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+
+    /* ---- REVIEWS SWIPEABLE SECTION (ABOVE FOOTER) ---- */
+    .reviews-section {
+      margin: 40px 0 30px;
+    }
+    .review-card {
+      flex: 0 0 290px;
+      scroll-snap-align: start;
+      padding: 18px;
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .review-user { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .review-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--glass-strong); display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--accent); font-size: 14px; }
+    .review-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+    .review-stars { color: var(--accent); font-size: 12px; margin-top: 2px; }
+    .review-comment { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+
+    /* ---- FOOTER ---- */
+    .site-footer {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      margin-top: 20px;
+    }
+    .footer-top { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    .footer-brand .footer-logo { font-size: 18px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+    .footer-brand .footer-logo span { color: var(--accent); }
+    .footer-tagline { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+    .footer-col h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .footer-col ul li a { font-size: 12.5px; color: var(--text-dim); }
+    .footer-social { display: flex; gap: 12px; justify-content: center; margin: 24px 0 16px; }
+    .social-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--glass-strong); display: flex; align-items: center; justify-content: center; color: var(--text); }
+    .footer-bottom { border-top: 1px solid var(--line); padding-top: 14px; text-align: center; font-size: 11px; color: var(--text-dim); }
+
+    @media (min-width: 600px) { .footer-top { grid-template-columns: 1.2fr 1fr 1fr; } }
+
+    /* ---- BOTTOM NAV ---- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 14px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 4px; padding: 6px;
+      z-index: 50;
+      width: min(420px, calc(100% - 24px));
+      background: rgba(11, 13, 16, 0.75);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+    }
+    .bottom-nav a {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 8px 4px; border-radius: var(--radius-sm);
+      font-size: 10.5px; color: var(--text-dim);
+    }
+    .bottom-nav a.active { color: var(--accent); background: var(--accent-soft); }
+</style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand" id="brandName">Portfolio</div>
+    <button class="icon-btn" onclick="window.location.href='project_p.html'" aria-label="Search">
+      <i data-lucide="search"></i>
+    </button>
+  </div>
+
+  <div class="container">
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+      <img src="profile.jpg" alt="Profile" class="avatar" id="profileImg" onerror="this.src='https://via.placeholder.com/105'" />
+      <h1 class="hero-title" id="heroName">Loading...</h1>
+      <p class="hero-tagline" id="heroTagline"></p>
+
+      <!-- HERO BUTTONS -->
+      <div class="btn-row">
+        <a href="contract.html" class="btn btn-accent"><i data-lucide="message-square"></i> Let's Chat</a>
+        <a href="#aboutSection" class="btn"><i data-lucide="user"></i> About Me</a>
+      </div>
+      <div>
+        <span class="badge" id="ratingBadge" style="display:none;"></span>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION WITH READ MORE -->
+    <section class="glass about-card" id="aboutSection">
+      <h3>About Me</h3>
+      <p id="aboutText">Loading about details...</p>
+      <button id="readMoreBtn" class="read-more-btn" style="display:none;">
+        <span>Read More</span> <i data-lucide="chevron-down"></i>
+      </button>
+
+      <!-- RECOMMENDED BUTTONS -->
+      <div class="rec-btns">
+        <a href="#skillsSection" class="rec-btn"><i data-lucide="code"></i> My Skill</a>
+        <a href="#projectsSection" class="rec-btn"><i data-lucide="folder"></i> My Project</a>
+      </div>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section class="skills-wrap" id="skillsSection">
+      <div class="eyebrow">Skills</div>
+      <h2 class="sec-title">How one foundation branches<br>into everything I build.</h2>
+
+      <div class="root-card">
+        <div class="tag">Core Foundation</div>
+        <div class="name" id="coreFoundationName">Web Development</div>
+      </div>
+
+      <!-- DESKTOP VIEW -->
+      <div class="branches-desktop" id="desktopBranches">
+        <p style="color:var(--text-dim); font-size:13px; text-align:center; grid-column: 1/-1;">সেটিংস থেকে স্কিল যুক্ত করুন...</p>
+      </div>
+
+      <!-- MOBILE VIEW: SWIPEABLE CAROUSEL -->
+      <div class="branches-mobile">
+        <div class="carousel-track" id="track"></div>
+        <div class="dots" id="dots"></div>
+        <div class="swipe-hint">← swipe to explore →</div>
+      </div>
+    </section>
+
+    <!-- LANGUAGES SECTION -->
+    <section class="lang-section">
+      <h3 class="lang-title">Languages</h3>
+      <div class="lang-row" id="languageContainer">
+        <p style="color:var(--text-dim); font-size:13px; grid-column: 1/-1; text-align:center;">সেটিংস থেকে ভাষা যুক্ত করুন...</p>
+      </div>
+    </section>
+
+    <!-- SWIPEABLE PROJECTS SECTION -->
+    <section style="margin-bottom:36px;" id="projectsSection">
+      <h3 style="font-size:16px; margin-bottom:12px; font-family:'Space Grotesk', sans-serif;">Projects</h3>
+      <div class="carousel-wrap" id="projectsPreview">
+        <p style="color:var(--text-dim); font-size:13px;">Loading projects...</p>
+      </div>
+    </section>
+
+    <!-- SWIPEABLE BLOGS SECTION -->
+    <section style="margin-bottom:36px;">
+      <h3 style="font-size:16px; margin-bottom:12px; font-family:'Space Grotesk', sans-serif;">Recent Blogs</h3>
+      <div class="carousel-wrap" id="blogPreview">
+        <p style="color:var(--text-dim); font-size:13px;">Loading blogs...</p>
+      </div>
+    </section>
+
+    <!-- REVIEWS SWIPEABLE CAROUSEL (ABOVE FOOTER) -->
+    <section class="reviews-section">
+      <h3 style="font-size:16px; margin-bottom:12px; font-family:'Space Grotesk', sans-serif;">Client Reviews</h3>
+      <div class="carousel-wrap" id="reviewsPreview">
+        <p style="color:var(--text-dim); font-size:13px;">Loading reviews...</p>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <h3 class="footer-logo"><span id="footerBrand">Portfolio</span></h3>
+          <p class="footer-tagline">Making ideas reality with modern technologies.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="project_p.html">Projects</a></li>
+            <li><a href="contract.html">Chat</a></li>
+            <li><a href="blog_p.html">Blogs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="more.html#privacy">Privacy Policy</a></li>
+            <li><a href="more.html#terms">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SOCIAL ICONS IN FOOTER -->
+      <div class="footer-social" id="footerSocial"></div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="year"></span> <span id="footerCopy">Portfolio</span>. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav glass">
+    <a href="home.html" class="active"><i data-lucide="home"></i>Home</a>
+    <a href="project_p.html"><i data-lucide="folder"></i>Projects</a>
+    <a href="contract.html"><i data-lucide="message-square"></i>Chat</a>
+    <a href="blog_p.html"><i data-lucide="notebook-pen"></i>Blog</a>
+    <a href="more.html"><i data-lucide="menu"></i>More</a>
+  </nav>
+
+  <script>
+    // পেজ লোড হওয়ার সাথে সাথে আইকন রেন্ডার করা
+    window.lucide?.createIcons();
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import {
+      getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs, addDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    // ফায়ারবেস কনফিগারেশন
+    const firebaseConfig = {
+      apiKey: "AIzaSyBN6M3FTTvy6V2JmrqbiYOZyaOM88g5Rvc",
+      authDomain: "test-pro-portfolio.firebaseapp.com",
+      projectId: "test-pro-portfolio",
+      storageBucket: "test-pro-portfolio.firebasestorage.app",
+      messagingSenderId: "368597108521",
+      appId: "1:368597108521:web:ea84f26576e757ee3c5938",
+      measurementId: "G-70622PC5Q4",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Lucide আইকন রিফ্রেশ
+    const refreshIcons = () => setTimeout(() => window.lucide?.createIcons(), 50);
+
+    // এলিমেন্ট ইউটিলিটি
+    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el && txt) el.textContent = txt; };
+    const escapeHtml = (s = "") => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    // বছর সেট
+    setTxt('year', new Date().getFullYear());
+
+    /* --- Read More / Read Less --- */
+    let fullAboutText = "";
+    const TEXT_LIMIT = 120;
+
+    function setupAboutText(text) {
+      fullAboutText = text || "";
+      const p = document.getElementById("aboutText");
+      const btn = document.getElementById("readMoreBtn");
+      if (!p || !btn) return;
+
+      if (fullAboutText.length > TEXT_LIMIT) {
+        p.textContent = fullAboutText.slice(0, TEXT_LIMIT) + "...";
+        btn.style.display = "inline-flex";
+        btn.dataset.expanded = "false";
+        btn.querySelector("span").textContent = "Read More";
+      } else {
+        p.textContent = fullAboutText;
+        btn.style.display = "none";
+      }
+      refreshIcons();
+    }
+
+    document.getElementById("readMoreBtn")?.addEventListener("click", function () {
+      const p = document.getElementById("aboutText");
+      const isExp = this.dataset.expanded === "true";
+      p.textContent = isExp ? fullAboutText.slice(0, TEXT_LIMIT) + "..." : fullAboutText;
+      this.dataset.expanded = isExp ? "false" : "true";
+      this.querySelector("span").textContent = isExp ? "Read More" : "Read Less";
+      this.querySelector("i")?.setAttribute("data-lucide", isExp ? "chevron-down" : "chevron-up");
+      refreshIcons();
+    });
+
+    /* --- সাইট সেটিংস লোড --- */
+    async function loadSiteSettings() {
+      try {
+        const snap = await getDoc(doc(db, "settings", "site"));
+        if (!snap.exists()) return setupAboutText("Welcome to my portfolio!");
+
+        const s = snap.data();
+        const title = s.siteTitle || "Portfolio";
+
+        ['brandName', 'heroName', 'footerBrand', 'footerCopy'].forEach(id => setTxt(id, title));
+        setTxt("heroTagline", s.tagline);
+        setTxt("coreFoundationName", s.coreFoundation);
+        setupAboutText(s.aboutText || "Welcome to my personal portfolio!");
+
+        if (s.profileImg && document.getElementById("profileImg")) {
+          document.getElementById("profileImg").src = s.profileImg;
+        }
+
+        // সোশ্যাল আইকন (ফুটার)
+        const footerSocial = document.getElementById("footerSocial");
+        if (footerSocial) {
+          footerSocial.innerHTML = "";
+          [["mail", s.email ? "mailto:" + s.email : null], ["facebook", s.facebook], ["linkedin", s.linkedin], ["github", s.github]]
+            .filter(([_, url]) => !!url)
+            .forEach(([icon, url]) => {
+              footerSocial.innerHTML += `<a href="${url}" target="_blank" rel="noopener" class="social-icon"><i data-lucide="${icon}"></i></a>`;
+            });
+        }
+
+        // স্কিল ও ল্যাঙ্গুয়েজ (ফায়ারবেস থেকে)
+        if (s.skillsBranches?.length) renderSkills(s.skillsBranches);
+        else document.getElementById("desktopBranches").innerHTML = `<p style="color:var(--text-dim);font-size:13px;text-align:center;grid-column:1/-1;">এখনো কোনো স্কিল যুক্ত করা হয়নি।</p>`;
+
+        if (s.languagesList?.length) renderLanguages(s.languagesList);
+        else document.getElementById("languageContainer").innerHTML = `<p style="color:var(--text-dim);font-size:13px;text-align:center;grid-column:1/-1;">এখনো কোনো ভাষা যুক্ত করা হয়নি।</p>`;
+
+        refreshIcons();
+      } catch (err) {
+        console.warn("সেটিংস ভুল:", err.message);
+        setupAboutText("Welcome to my portfolio!");
+      }
+    }
+
+    /* --- স্কিল রেন্ডার --- */
+    function renderSkills(branches) {
+      const desktop = document.getElementById("desktopBranches");
+      const track = document.getElementById("track");
+      const dots = document.getElementById("dots");
+      if (!desktop || !track || !dots) return;
+
+      desktop.innerHTML = ""; track.innerHTML = ""; dots.innerHTML = "";
+
+      branches.forEach((b, idx) => {
+        const col = b.accent || '#7dd3b0';
+
+        desktop.innerHTML += `
+          <div class="branch">
+            <div class="branch-card" style="--accent-color:${col}">
+              <div class="name">${escapeHtml(b.name || '')}</div>
+              <div class="desc">${escapeHtml(b.desc || '')}</div>
+            </div>
+            <div class="stem" style="background:${col}"></div>
+            <div class="leaves">
+              ${(b.working || []).map(w => `<span class="leaf" style="--accent-color:${col}">${escapeHtml(w)}</span>`).join("")}
+              ${(b.learning || []).map(l => `<span class="leaf learning" style="--accent-color:${col};color:${col}">${escapeHtml(l)}</span>`).join("")}
+            </div>
+          </div>`;
+
+        track.innerHTML += `
+          <div class="skill-card-m" style="--accent-color:${col}">
+            <div class="name">${escapeHtml(b.name || '')}</div>
+            <div class="desc">${escapeHtml(b.desc || '')}</div>
+            <div class="list-label">Working with</div>
+            <div class="chips">${(b.working || []).map(w => `<span class="chip" style="--accent-color:${col}">${escapeHtml(w)}</span>`).join("")}</div>
+            <div class="list-label">Currently learning</div>
+            <div class="chips">${(b.learning || []).map(l => `<span class="chip learning" style="--accent-color:${col};color:${col}">${escapeHtml(l)}</span>`).join("")}</div>
+          </div>`;
+
+        dots.innerHTML += `<button class="dot ${idx === 0 ? 'active' : ''}" data-index="${idx}" style="--accent-active:${col}"></button>`;
+      });
+
+      initCarousel();
+      refreshIcons();
+    }
+
+    /* --- ল্যাঙ্গুয়েজ রেন্ডার --- */
+    function renderLanguages(langList) {
+      const container = document.getElementById("languageContainer");
+      if (!container) return;
+      container.innerHTML = langList.map(l => `
+        <div class="lang-item">
+          <span class="lang-name">${escapeHtml(l.name || '')}</span>
+          <div class="lang-bar"><div class="lang-fill" style="width:${l.fill || '50%'}"></div></div>
+          <span class="lang-level">${escapeHtml(l.level || '')}</span>
+        </div>`).join("");
+    }
+
+    /* --- মোবাইল স্কিল ক্যারোজেল --- */
+    function initCarousel() {
+      const track = document.getElementById('track');
+      const dots = document.querySelectorAll('.dot');
+      if (!track || !track.children.length) return;
+
+      const cards = Array.from(track.children);
+      const getStep = () => cards[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 0);
+
+      const setActive = idx => {
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        cards.forEach((c, i) => c.classList.toggle('in-view', i === idx));
+      };
+
+      dots.forEach(dot => dot.addEventListener('click', () => {
+        track.scrollTo({ left: parseInt(dot.dataset.index) * getStep(), behavior: 'smooth' });
+      }));
+
+      track.addEventListener('scroll', () => {
+        const idx = Math.round(track.scrollLeft / getStep());
+        setActive(Math.max(0, Math.min(cards.length - 1, idx)));
+      });
+
+      setActive(0);
+    }
+
+    /* --- প্রজেক্ট, ব্লগ ও রিভিউ লোড --- */
+    async function loadData() {
+      try {
+        // ১. গড় রেটিং ব্যাজ
+        const rSnap = await getDocs(collection(db, "ratings"));
+        const revEl = document.getElementById("reviewsPreview");
+
+        if (!rSnap.empty) {
+          let total = 0;
+          let revHtml = "";
+
+          rSnap.forEach(d => {
+            const r = d.data();
+            const stars = r.stars || 5;
+            total += stars;
+            const name = r.name || "Client";
+            const comment = r.comment || "Great service and dynamic work!";
+
+            revHtml += `
+              <div class="review-card">
+                <div>
+                  <div class="review-user">
+                    <div class="review-avatar">${name.charAt(0).toUpperCase()}</div>
+                    <div>
+                      <div class="review-name">${escapeHtml(name)}</div>
+                      <div class="review-stars">${"★".repeat(stars)}${"☆".repeat(5 - stars)}</div>
+                    </div>
+                  </div>
+                  <div class="review-comment">${escapeHtml(comment)}</div>
+                </div>
+              </div>`;
+          });
+
+          const avg = (total / rSnap.size).toFixed(1);
+          const badge = document.getElementById("ratingBadge");
+          if (badge) {
+            badge.textContent = `⭐ ${avg} (${rSnap.size} Reviews)`;
+            badge.style.display = "inline-block";
+          }
+
+          // ফুটারের উপরে সোয়াইপেবল রিভিউ রেন্ডার
+          if (revEl) revEl.innerHTML = revHtml;
+        } else {
+          if (revEl) revEl.innerHTML = `<p style="color:var(--text-dim);font-size:13px;">এখনো কোনো রিভিউ নেই।</p>`;
+        }
+
+        // ২. প্রজেক্টস
+        const pSnap = await getDocs(query(collection(db, "projects"), orderBy("createdAt", "desc"), limit(6)));
+        const pEl = document.getElementById("projectsPreview");
+        if (pEl) {
+          pEl.innerHTML = pSnap.empty ? `<p style="color:var(--text-dim);font-size:13px;">No projects available.</p>` :
+            pSnap.docs.map(d => {
+              const p = d.data();
+              return `<a href="project_p.html" class="glass swipe-card">
+                <div>
+                  ${p.coverUrl ? `<img src="${p.coverUrl}" class="cover" />` : ""}
+                  <h4>${escapeHtml(p.title || "")}</h4>
+                  <p>${escapeHtml((p.description || "").slice(0, 80))}...</p>
+                </div>
+              </a>`;
+            }).join("");
+        }
+
+        // ৩. ব্লগস
+        const bSnap = await getDocs(query(collection(db, "blogs"), orderBy("createdAt", "desc"), limit(6)));
+        const bEl = document.getElementById("blogPreview");
+        if (bEl) {
+          const posts = bSnap.docs.map(d => d.data()).filter(b => b.status === "প্রকাশিত" || b.status === "Published");
+          bEl.innerHTML = posts.length === 0 ? `<p style="color:var(--text-dim);font-size:13px;">No blogs available.</p>` :
+            posts.map(b => `<a href="blog_p.html" class="glass swipe-card">
+              <div>
+                <h4>${escapeHtml(b.title || "")}</h4>
+                <p>${escapeHtml((b.excerpt || b.content || "").slice(0, 80))}...</p>
+              </div>
+            </a>`).join("");
+        }
+
+        refreshIcons();
+      } catch (err) {
+        console.warn("ডাটা লোড ত্রুটি:", err.message);
+      }
+    }
+
+    /* --- অ্যানালিটিক্স ট্র্যাকিং --- */
+    async function trackVisitor() {
+      let id = localStorage.getItem("visitor_id") || ("v_" + Math.random().toString(36).slice(2) + Date.now().toString(36));
+      localStorage.setItem("visitor_id", id);
+      try {
+        await addDoc(collection(db, "analytics_events"), {
+          page: window.location.pathname,
+          referrer: document.referrer || "",
+          visitorId: id,
+          ts: serverTimestamp(),
+        });
+      } catch (e) {}
+    }
+
+    // রান ইনিশিয়ালাইজেশন
+    loadSiteSettings();
+    loadData();
+    trackVisitor();
+  </script>
+
+</body>
+</html>
